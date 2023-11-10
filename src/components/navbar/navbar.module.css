@@ -1,0 +1,326 @@
+.navbar {
+  width: 335px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 8px 12px 20px 12px;
+  border-right: var(--border-right);
+  display: flex;
+  list-style: none;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.mobileNav {
+  display: none;
+}
+.top {
+  height: 92px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  gap: 10px;
+}
+
+.head {
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.login {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  gap: 10px;
+}
+
+.loginText {
+  font-size: 19px;
+  font-weight: 500;
+}
+
+/*  */
+.darkModeButton {
+  height: 56px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.goal,
+.weight {
+  height: 56px;
+  padding: 12px;
+  font-size: 17px;
+  font-weight: 400;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  transition: background 0.3s ease;
+}
+
+.workout {
+  height: 56px;
+  padding: 12px;
+  font-size: 17px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  transition: background 0.3s ease;
+}
+.workoutText {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.goal:hover,
+.weight:hover,
+.workout:hover {
+  background: var(--nav-item-hover);
+  border-radius: 12px;
+}
+
+.goal:hover .icon,
+.weight:hover .icon,
+.workout:hover .icon {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}
+
+.listItem {
+  height: 56px;
+  padding: 12px 12px 12px 24px;
+  font-size: 17px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.listItem:hover {
+  border-radius: 12px;
+  background: var(--nav-item-hover);
+}
+
+.listItem:hover .listIcon {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}
+
+/*  */
+
+.icon {
+  width: 30px;
+  height: 30px;
+  filter: var(--icon-color);
+  transition: transform 0.2s ease;
+}
+
+.listIcon {
+  filter: var(--icon-color);
+  width: 25px;
+  height: 25px;
+  transition: transform 0.2s ease;
+}
+
+.downIcon {
+  width: 22px;
+  height: 22px;
+  filter: var(--icon-color);
+  opacity: 0.9;
+  transition: transform 0.4s ease;
+}
+
+.inverted-down-icon {
+  transform: rotate(180deg);
+  transition: transform 0.4s ease;
+}
+
+/*  */
+.hide {
+  display: none;
+}
+
+.pageActive {
+  font-weight: 600;
+  background: var(--nav-item-hover);
+
+  border-radius: 12px;
+}
+
+.pageActive .icon {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}
+
+@media screen and (max-width: 1919px) {
+  .navbar {
+    width: 269px;
+  }
+}
+@media screen and (max-width: 1100px) {
+  .navbar {
+    width: 220px;
+    padding: 8px 8px 20px 8px;
+  }
+}
+@media screen and (max-width: 995px) and (min-width: 825px) {
+  .navbar {
+    flex-direction: row;
+    width: 100%;
+    height: 66px;
+    top: 0;
+    left: 0;
+    padding: 0;
+    border-right: none;
+    justify-content: space-between;
+    background-color: var(--tile-color);
+    z-index: 1;
+    border-bottom: var(--border-bottom);
+  }
+  .horizontalNav {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .top {
+    height: 100%;
+    padding: 0 24px 0 24px;
+  }
+  .login {
+    height: 100%;
+    padding: 0 24px 0 24px;
+  }
+  .goal,
+  .weight {
+    height: 56px;
+    padding: 10px;
+    font-size: 16px;
+    gap: 12px;
+  }
+  .workout {
+    height: 56px;
+    padding: 10px;
+    font-size: 16px;
+  }
+  .workoutText {
+    gap: 12px;
+  }
+
+  .pageActive {
+    background: var(--main-bg);
+    border-radius: 12px;
+  }
+  .workoutList {
+    position: absolute;
+    top: 70px;
+    left: 430px;
+    background-color: var(--tile-color);
+    width: 170px;
+    border-radius: 12px;
+  }
+
+  .listItem {
+    height: 56px;
+    padding-left: 16px;
+    gap: 12px;
+  }
+  .downIcon {
+    margin-left: 8px;
+  }
+}
+
+@media screen and (max-width: 824px) {
+  .navbar {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: -100vh;
+    left: 0;
+    padding: 55px 12px 20px 12px;
+    border-right: none;
+    display: flex;
+    list-style: none;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--main-bg);
+    z-index: 1;
+    transition: all 1000ms ease;
+  }
+
+  .top {
+    display: none;
+  }
+
+  .active {
+    top: 0;
+  }
+
+  .mobileNav {
+    background-color: var(--tile-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 44px;
+    position: fixed;
+    top: 0;
+    padding: 0 16px;
+    z-index: 2;
+  }
+
+  .menuIconContainer {
+    width: 20px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .menuIcon {
+    position: relative;
+    width: 100%;
+  }
+
+  .line_1,
+  .line_2 {
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background: var(--main-color);
+    transition-property: transform, top;
+    transition-delay: 0ms, 160ms;
+    transition-duration: 200ms;
+  }
+
+  .line_1 {
+    top: -4px;
+  }
+
+  .line_2 {
+    top: 4px;
+  }
+
+  .menuActive .line_1 {
+    top: 0;
+    transform: rotateZ(45deg);
+    transition-property: top, transform;
+    transition-delay: 0ms, 160ms;
+    transition-duration: 200ms;
+  }
+
+  .menuActive .line_2 {
+    top: 0;
+    transform: rotateZ(-45deg);
+    transition-property: top, transform;
+    transition-delay: 0ms, 160ms;
+    transition-duration: 200ms;
+  }
+}

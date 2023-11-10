@@ -1,0 +1,437 @@
+.page {
+  width: 975px;
+  margin: auto;
+  padding: 40px 0;
+}
+.firstRow {
+  display: flex;
+  gap: 15px;
+}
+
+.graph {
+  width: 700px;
+  padding: 10px;
+  height: 360px;
+  cursor: pointer;
+
+  background: var(--graph-bg);
+  border-radius: 16px;
+}
+
+.weightContainer {
+  width: 260px;
+  height: 360px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.currentWeight {
+  position: relative;
+}
+
+.editIcon {
+  filter: var(--icon-color);
+  opacity: 0.8;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  cursor: pointer;
+}
+
+.editIcon:hover {
+  opacity: 1;
+}
+.exitIcon {
+  filter: var(--icon-color);
+  opacity: 0.8;
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  cursor: pointer;
+}
+.exitIcon:hover {
+  opacity: 1;
+}
+
+.editGoalWeight {
+  position: absolute;
+  background-color: var(--edit-tile-bg);
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  /* display: none; */
+}
+
+.currentWeight,
+.goalWeight,
+.howMuchNeed {
+  border-radius: 16px;
+  background-color: var(--tile-color);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.weightNum {
+  font-size: 36px;
+  font-weight: 500;
+}
+
+.weightText {
+  font-size: 20px;
+  font-weight: 400;
+  opacity: 0.8;
+}
+/*  */
+.secondRow {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.secondRowHead {
+  font-weight: 600;
+}
+.secondRowItem {
+  margin-top: 20px;
+  padding: 20px;
+  height: 100px;
+  background-color: var(--tile-color);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.add {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.weightInput,
+.dateInput {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.weightAdd {
+  width: 100px;
+  height: 39px;
+  padding: 8px;
+  border: 1px solid var(--main-bg);
+  background-color: var(--input-bg);
+  color: var(--main-color);
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.weightAdd::placeholder {
+  color: var(--main-color);
+}
+
+.dateAdd {
+  width: 140px;
+  height: 39px;
+  color: var(--main-color);
+  padding: 8px;
+  border: 1px solid var(--main-bg);
+  background-color: var(--input-bg);
+  border-radius: 4px;
+  font-size: 16px;
+}
+.addButton {
+  width: 80px;
+  height: 39px;
+  background-color: var(--button-bg);
+  color: var(--main-bg);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.addButton:hover {
+  transform: scale(1.05);
+}
+
+.addButton:active {
+  transform: scale(0.8);
+}
+
+/*  */
+.thirdRow {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.thirdRowHead {
+  font-weight: 600;
+}
+
+.thirdRowItem {
+  margin-top: 20px;
+  padding: 20px;
+  height: 120px;
+  background-color: var(--tile-color);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.itemWeight {
+  width: 140px;
+  margin-left: 20px;
+  font-size: 32px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.itemDate {
+  margin-left: 30px;
+  font-size: 19px;
+  font-weight: 300;
+}
+
+.dltIcon {
+  filter: var(--icon-color);
+  opacity: 0.7;
+}
+
+.itemDlt {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  padding: 10px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.itemDlt:hover {
+  background-color: #474a69;
+  opacity: 1;
+}
+
+/*  */
+.gainedText {
+  color: rgb(220, 38, 38);
+}
+.loosedText {
+  color: rgb(34, 197, 94);
+}
+
+/*  */
+
+@media screen and (max-width: 1560px) {
+  .page {
+    width: 730px;
+  }
+  .firstRow {
+    gap: 10px;
+  }
+  .graph {
+    width: 525px;
+    padding: 8px;
+    height: 270px;
+    border-radius: 12px;
+  }
+  .weightContainer {
+    width: 195px;
+    height: 270px;
+    gap: 8px;
+  }
+
+  .editIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .currentWeight,
+  .goalWeight,
+  .howMuchNeed {
+    border-radius: 12px;
+    gap: 4px;
+  }
+  .weightNum {
+    font-size: 32px;
+    font-weight: 500;
+  }
+
+  .weightText {
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.8;
+  }
+
+  /*  */
+  .secondRow {
+    margin-top: 16px;
+  }
+  .secondRowItem {
+    margin-top: 16px;
+    padding: 16px;
+    height: 75px;
+    border-radius: 12px;
+  }
+  .weightAdd {
+    width: 76px;
+    height: 30px;
+    padding: 6px;
+
+    font-size: 15px;
+  }
+  .date {
+    margin-left: 10px;
+  }
+  .dateAdd {
+    width: 118px;
+    height: 30px;
+    padding: 6px;
+    font-size: 14px;
+  }
+  .addButton {
+    width: 60px;
+    height: 30px;
+    border-radius: 10px;
+    font-size: 15px;
+  }
+
+  /*  */
+  .thirdRow {
+    margin-top: 16px;
+  }
+  .thirdRowItem {
+    margin-top: 15px;
+    padding: 16px;
+    height: 90px;
+    border-radius: 12px;
+  }
+
+  .itemWeight {
+    width: 120px;
+    margin-left: 14px;
+    font-size: 24px;
+  }
+
+  .itemDate {
+    margin-left: 20px;
+    font-size: 16px;
+  }
+  .itemDlt {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    padding: 7px;
+  }
+  .dltIcon {
+    width: 25px;
+    height: 25px;
+  }
+  /*  */
+
+  .secondRowHead,
+  .thirdRowHead {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .page {
+    width: 525px;
+  }
+
+  .firstRow {
+    flex-direction: column;
+  }
+  .weightContainer {
+    display: grid;
+    width: 100%;
+    height: 114px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+  }
+}
+
+@media screen and (max-width: 995px) {
+  .page {
+    padding: 76px 0;
+  }
+}
+
+@media screen and (max-width: 824px) {
+  .page {
+    padding: 52px 0;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .page {
+    width: 100%;
+    padding: 52px 10px;
+  }
+  .graph {
+    width: 100%;
+    height: 50vw;
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .weightContainer {
+    height: 200px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .currentWeight {
+    grid-area: 1 / 1 / 2 / 3;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .add {
+    display: flex;
+    flex-direction: column;
+    align-items: normal;
+    gap: 10px;
+  }
+
+  .secondRowItem {
+    padding: 0 20px;
+    height: 100px;
+    border-radius: 16px;
+  }
+}
+
+@media screen and (max-width: 355px) {
+  .itemWeight {
+    margin-left: 0px;
+  }
+  .thirdRowItem {
+    padding-left: 14px;
+    padding-right: 10px;
+  }
+}
