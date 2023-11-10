@@ -60,7 +60,7 @@ function aggregateWeightByMonth(weightData) {
   return result;
 }
 
-export default function page() {
+export default function Page() {
   const [weight, setWeight] = useState(""); // State variable for weight
   const [newGoalWeight, setNewGoalWeight] = useState("");
   const [weightGoal, setWeightGoal] = useState(""); // State variable for weight
