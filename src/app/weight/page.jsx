@@ -38,8 +38,9 @@ function aggregateWeightByMonth(weightData) {
     const date = new Date(weightEntry.attributes.date);
     const year = date.getFullYear();
     const month = date.toLocaleString("default", { month: "short" }); // Get short month name, e.g., "Jan"
+    const day = date.getDate();
 
-    const key = `${month} ${year}`;
+    const key = `${day} ${month} ${year}`; // Adjusted key to include day, month, and year
     if (!aggregatedData[key]) {
       aggregatedData[key] = { sum: 0, count: 0 };
     }
