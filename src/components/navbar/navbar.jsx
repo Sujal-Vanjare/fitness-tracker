@@ -2,9 +2,10 @@
 import Link from "next/link";
 import styles from "./navbar.module.css";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
+import { fetchDataFromApi } from "@/utils/api";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -23,6 +24,19 @@ export default function Navbar() {
   const removeMobileNavActiveClass = () => {
     setNavActive(true);
   };
+
+  const [workoutList, setWorkoutList] = useState("");
+
+  // fetching Workout List
+  useEffect(() => {
+    fetchDataFromApi("/api/workouts")
+      .then((data) => {
+        setWorkoutList(data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch weight history:", error);
+      });
+  }, []);
 
   return (
     <div>
@@ -112,65 +126,31 @@ export default function Navbar() {
           <ul
             className={`${styles.workoutList} ${isVisible ? "" : styles.hide}`}
           >
-            <Link
-              href={"/workout/push"}
-              className={`${styles.listItem} ${
-                pathname === "/workout/push" ? styles.pageActive : ""
-              }`}
-              onClick={removeMobileNavActiveClass}
-            >
-              <Image
-                width={100}
-                height={100}
-                src="/dumbbell.png"
-                className={styles.listIcon}
-                alt="workout icon"
-              />
-              <span>Push</span>
-            </Link>
-            <Link href={"/workout/pull"} className={styles.listItem}>
-              <Image
-                width={100}
-                height={100}
-                src="/dumbbell.png"
-                className={styles.listIcon}
-                alt="workout icon"
-              />
-              <span>Pull</span>
-            </Link>
-
-            <Link href={"/workout/legs"} className={styles.listItem}>
-              <Image
-                width={100}
-                height={100}
-                src="/dumbbell.png"
-                className={styles.listIcon}
-                alt="workout icon"
-              />
-              <span>Legs</span>
-            </Link>
-
-            <Link href={"/workout/barbell"} className={styles.listItem}>
-              <Image
-                width={100}
-                height={100}
-                src="/dumbbell.png"
-                className={styles.listIcon}
-                alt="workout icon"
-              />
-              <span>Barbell</span>
-            </Link>
-            <Link href={"/workout/arms"} className={styles.listItem}>
-              <Image
-                width={100}
-                height={100}
-                src="/dumbbell.png"
-                className={styles.listIcon}
-                alt="workout icon"
-              />
-              <span>Arms</span>
-            </Link>
+            {workoutList &&
+              workoutList.data &&
+              workoutList.data.map((workout) => (
+                <Link
+                  key={workout.id}
+                  href={`/workout/${workout.attributes.slug}`}
+                  className={`${styles.listItem} ${
+                    pathname === `/workout/${workout.attributes.slug}`
+                      ? styles.pageActive
+                      : ""
+                  }`}
+                  onClick={removeMobileNavActiveClass}
+                >
+                  <Image
+                    width={100}
+                    height={100}
+                    src="/dumbbell.png"
+                    className={styles.listIcon}
+                    alt="workout icon"
+                  />
+                  <span>{workout.attributes.workoutName}</span>
+                </Link>
+              ))}
           </ul>
+
           <div className={styles.darkModeButton}>
             <DarkModeToggle />
           </div>

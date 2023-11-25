@@ -61,7 +61,7 @@ function aggregateWeightByMonth(weightData) {
   return result;
 }
 
-export default function Page() {
+export default function Page({ params }) {
   const [weight, setWeight] = useState(""); // State variable for weight
   const [newGoalWeight, setNewGoalWeight] = useState("");
   const [weightGoal, setWeightGoal] = useState(""); // State variable for weight
@@ -69,6 +69,7 @@ export default function Page() {
 
   const [date, setDate] = useState(""); // State variable for date
   const [weights, setWeights] = useState({ data: [] }); // Initialize weights as an object with a data property that is an empty array
+  const [workout, setWorkout] = useState("");
 
   // Find the most recent weight entry
   const currentWeightEntry = weights.data[0];
@@ -132,7 +133,6 @@ export default function Page() {
   const chartData = aggregateWeightByMonth(weights.data);
 
   chartData.reverse();
-  console.log(aggregateWeightByMonth(weights.data));
 
   const data = {
     labels: chartData.map((data) => data.month),
@@ -333,8 +333,77 @@ export default function Page() {
     }
   };
 
+  ///// fetching
+  useEffect(() => {
+    fetchDataFromApi(
+      `/api/workouts?filters[slug][$eq]=${params.slug}&populate=workoutImg`
+    )
+      .then((data) => {
+        setWorkout(data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch Workout name and image:", error);
+      });
+  }, [params.slug]);
+
+  // Assuming workout is an array with one element
+  const workoutName =
+    workout && workout.data && workout.data[0] && workout.data[0].attributes
+      ? workout.data[0].attributes.workoutName
+      : "...";
+
+  const workoutImg =
+    workout &&
+    workout.data &&
+    workout.data[0] &&
+    workout.data[0].attributes &&
+    workout.data[0].attributes.workoutImg &&
+    workout.data[0].attributes.workoutImg.data.attributes
+      ? workout.data[0].attributes.workoutImg.data.attributes.url
+      : null;
+
+  console.log("img", workoutImg);
+
   return (
     <div className={styles.page}>
+      <section className={styles.pageHead}>
+        <div className={styles.headContainer}>
+          <div className={styles.workoutName}>
+            {workoutName}
+            <Image
+              width={28}
+              height={28}
+              src="/edit-icon.png"
+              alt="edit"
+              className={styles.editIcon}
+            />
+          </div>
+          <div className={styles.editInstruction}>
+            &#40; You can edit the Workout Name and Workout Image if you wish.
+            Just click on the edit icon at the top &#41;
+          </div>
+        </div>
+        <div className={styles.workoutImgContainer}>
+          {workoutImg !== null ? (
+            <img
+              // width={500}
+              // height={500}
+              src={`https:${data.workoutImg}`}
+              alt="Workout Image"
+              className={styles.workoutImg}
+            />
+          ) : (
+            <p>No image available</p>
+          )}
+          <Image
+            width={28}
+            height={28}
+            src="/edit-icon.png"
+            alt="edit"
+            className={styles.editIcon}
+          />
+        </div>
+      </section>
       <section className={styles.firstRow}>
         <div className={styles.graph}>
           <Line data={data} options={options}></Line>

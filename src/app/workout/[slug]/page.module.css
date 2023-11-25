@@ -3,6 +3,44 @@
   margin: auto;
   padding: 40px 0;
 }
+
+.pageHead {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 25px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  background-color: var(--tile-color);
+}
+
+.headContainer {
+  padding: 20px 30px 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.workoutImgContainer {
+  position: relative;
+}
+.workoutName {
+  position: relative;
+  font-size: 36px;
+  font-weight: 600;
+}
+
+.editInstruction {
+  font-size: 16px;
+  font-weight: 300;
+  opacity: 0.7;
+}
+
+.workoutImg {
+  width: 200px;
+  height: 200px;
+}
+
 .firstRow {
   display: flex;
   gap: 15px;
