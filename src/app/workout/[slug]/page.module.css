@@ -21,9 +21,65 @@
   gap: 20px;
 }
 
-.workoutImgContainer {
-  position: relative;
+/* loading animation start   */
+.loaderContainer {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.loader {
+  width: 60px;
+}
+
+.loader_wheel {
+  animation: spin 1s infinite linear;
+  border: 2px solid rgba(30, 30, 30, 0.5);
+  border-left: 4px solid #fff;
+  border-radius: 50%;
+  height: 50px;
+  margin-bottom: 10px;
+  width: 50px;
+}
+
+.loader_text {
+  color: #fff;
+  font-family: arial, sans-serif;
+}
+
+.loader_text:after {
+  content: "Loading";
+  animation: load 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load {
+  0% {
+    content: "Loading";
+  }
+  33% {
+    content: "Loading.";
+  }
+  67% {
+    content: "Loading..";
+  }
+  100% {
+    content: "Loading...";
+  }
+}
+
+/* loading animation end  */
+
 .workoutName {
   position: relative;
   font-size: 36px;
@@ -402,6 +458,42 @@
     width: 525px;
   }
 
+  .pageHead {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    background-color: var(--tile-color);
+  }
+
+  .headContainer {
+    padding: 10px 20px 5px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .workoutName {
+    font-size: 30px;
+  }
+
+  .editInstruction {
+    font-size: 14px;
+  }
+
+  .workoutImg {
+    width: 180px;
+    height: 180px;
+  }
+
+  .loaderContainer {
+    width: 180px;
+    height: 180px;
+  }
+
+  .loader {
+    width: 50px;
+  }
+
   .firstRow {
     flex-direction: column;
   }
@@ -431,6 +523,36 @@
     width: 100%;
     padding: 52px 10px;
   }
+
+  .headContainer {
+    padding: 5px 10px 2px 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .workoutName {
+    font-size: 28px;
+  }
+
+  .editInstruction {
+    font-size: 12px;
+  }
+
+  .workoutImg {
+    width: 160px;
+    height: 160px;
+  }
+
+  .loaderContainer {
+    width: 160px;
+    height: 160px;
+  }
+
+  .loader {
+    width: 40px;
+  }
+
   .graph {
     width: 100%;
     height: 50vw;
@@ -465,6 +587,35 @@
 }
 
 @media screen and (max-width: 355px) {
+  .headContainer {
+    padding: 5px 10px 2px 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .workoutName {
+    font-size: 25px;
+  }
+
+  .editInstruction {
+    font-size: 12px;
+  }
+
+  .workoutImg {
+    width: 140px;
+    height: 140px;
+  }
+
+  .loaderContainer {
+    width: 140px;
+    height: 140px;
+  }
+
+  .loader {
+    width: 20px;
+  }
+
   .itemWeight {
     margin-left: 0px;
   }

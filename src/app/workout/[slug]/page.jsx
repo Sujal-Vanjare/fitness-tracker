@@ -35,7 +35,7 @@ function aggregateWeightByMonth(weightData) {
   const aggregatedData = {};
 
   weightData.forEach((weightEntry) => {
-    const date = new Date(weightEntry.attributes.date);
+    const date = new Date(weightEntry.attributes.dateOfWorkout);
     const year = date.getFullYear();
     const month = date.toLocaleString("default", { month: "short" }); // Get short month name, e.g., "Jan"
     const day = date.getDate();
@@ -45,7 +45,7 @@ function aggregateWeightByMonth(weightData) {
       aggregatedData[key] = { sum: 0, count: 0 };
     }
 
-    aggregatedData[key].sum += weightEntry.attributes.weight_kg;
+    aggregatedData[key].sum += weightEntry.attributes.dumbbellWeight;
     aggregatedData[key].count++;
   });
 
@@ -71,21 +71,58 @@ export default function Page({ params }) {
   const [weights, setWeights] = useState({ data: [] }); // Initialize weights as an object with a data property that is an empty array
   const [workout, setWorkout] = useState("");
 
+  ///// fetching Workout name and image
+  useEffect(() => {
+    fetchDataFromApi(
+      `/api/workouts?filters[slug][$eq]=${params.slug}&populate=workoutImg`
+    )
+      .then((data) => {
+        setWorkout(data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch Workout name and image:", error);
+      });
+  }, [params.slug]);
+
+  // Assuming workout is an array with one element
+  const workoutName =
+    workout && workout.data && workout.data[0] && workout.data[0].attributes
+      ? workout.data[0].attributes.workoutName
+      : "...";
+
+  const workoutImg =
+    workout &&
+    workout.data &&
+    workout.data[0] &&
+    workout.data[0].attributes &&
+    workout.data[0].attributes.workoutImg &&
+    workout.data[0].attributes.workoutImg.data.attributes
+      ? workout.data[0].attributes.workoutImg.data.attributes.url
+      : null;
+
+  const workoutId =
+    workout && workout.data && workout.data[0] && workout.data[0].id;
+
+  /////////
+
   // Find the most recent weight entry
   const currentWeightEntry = weights.data[0];
 
   // Function to calculate weight difference
   const calculateWeightDifference = (weightHistory) => {
     const validWeights = weightHistory.filter(
-      (weight) => weight.attributes && weight.attributes.weight_kg !== undefined
+      (weight) =>
+        weight.attributes && weight.attributes.dumbbellWeight !== undefined
     );
     validWeights.sort(
-      (a, b) => new Date(b.attributes.date) - new Date(a.attributes.date)
+      (a, b) =>
+        new Date(b.attributes.dateOfWorkout) -
+        new Date(a.attributes.dateOfWorkout)
     );
 
     if (validWeights.length >= 2) {
-      const currentWeight = validWeights[0].attributes.weight_kg;
-      const previousWeight = validWeights[1].attributes.weight_kg;
+      const currentWeight = validWeights[0].attributes.dumbbellWeight;
+      const previousWeight = validWeights[1].attributes.dumbbellWeight;
       const difference = currentWeight - previousWeight;
 
       if (!isNaN(difference)) {
@@ -174,8 +211,8 @@ export default function Page({ params }) {
             return value + " kg"; // Return a string with " kg" appended to the tick value
           },
         },
-        max: 100,
-        min: 40,
+        // max: 100,
+        // min: 40,
         grid: {
           color: "rgba(255, 255, 255, 0.2)",
         },
@@ -275,7 +312,9 @@ export default function Page({ params }) {
 
   // fetching weight history
   useEffect(() => {
-    fetchDataFromApi("/api/weights")
+    fetchDataFromApi(
+      `/api/dumbbell-weights?populate=*&[filters][workout_list][slug][$eq]=${params.slug}`
+    )
       .then((data) => {
         setWeights(data);
       })
@@ -284,7 +323,7 @@ export default function Page({ params }) {
       });
   }, []);
 
-  // add New weight history item
+  /////// add New weight history item
   const handleAddWeight = async () => {
     // Check if weight and date are not empty
     if (!weight || !date) {
@@ -294,16 +333,21 @@ export default function Page({ params }) {
 
     const data = {
       data: {
-        weight_kg: weight, // Use the weight state variable
-        date: date, // Use the date state variable
+        dumbbellWeight: weight, // Use the weight state variable
+        dateOfWorkout: date, // Use the date state variable
+        workout_list: {
+          id: workoutId,
+        },
       },
     };
 
     try {
-      const response = await postDataToApi("/api/weights", data);
+      const response = await postDataToApi("/api/dumbbell-weights", data);
 
       // Optionally, you can fetch the updated weight history after adding a new entry
-      fetchDataFromApi("/api/weights").then((data) => {
+      fetchDataFromApi(
+        `/api/dumbbell-weights?populate=*&[filters][workout_list][slug][$eq]=${params.slug}`
+      ).then((data) => {
         setWeights(data);
       });
 
@@ -318,11 +362,15 @@ export default function Page({ params }) {
   // delete weight history item
   const handleDeleteWeight = async (weightId) => {
     try {
-      const response = await deleteDataFromApi(`/api/weights/${weightId}`);
+      const response = await deleteDataFromApi(
+        `/api/dumbbell-weights/${weightId}`
+      );
       if (response.data) {
         console.log("Weight entry deleted successfully");
         // Optionally, you can fetch the updated weight history after deleting the entry
-        fetchDataFromApi("/api/weights").then((data) => {
+        fetchDataFromApi(
+          `/api/dumbbell-weights?populate=*&[filters][workout_list][slug][$eq]=${params.slug}`
+        ).then((data) => {
           setWeights(data);
         });
       } else {
@@ -332,37 +380,6 @@ export default function Page({ params }) {
       console.error("Error deleting weight entry:", error);
     }
   };
-
-  ///// fetching
-  useEffect(() => {
-    fetchDataFromApi(
-      `/api/workouts?filters[slug][$eq]=${params.slug}&populate=workoutImg`
-    )
-      .then((data) => {
-        setWorkout(data);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch Workout name and image:", error);
-      });
-  }, [params.slug]);
-
-  // Assuming workout is an array with one element
-  const workoutName =
-    workout && workout.data && workout.data[0] && workout.data[0].attributes
-      ? workout.data[0].attributes.workoutName
-      : "...";
-
-  const workoutImg =
-    workout &&
-    workout.data &&
-    workout.data[0] &&
-    workout.data[0].attributes &&
-    workout.data[0].attributes.workoutImg &&
-    workout.data[0].attributes.workoutImg.data.attributes
-      ? workout.data[0].attributes.workoutImg.data.attributes.url
-      : null;
-
-  console.log("img", workoutImg);
 
   return (
     <div className={styles.page}>
@@ -385,23 +402,22 @@ export default function Page({ params }) {
         </div>
         <div className={styles.workoutImgContainer}>
           {workoutImg !== null ? (
-            <img
-              // width={500}
-              // height={500}
-              src={`https:${data.workoutImg}`}
+            <Image
+              width={500}
+              height={500}
+              src={workoutImg}
               alt="Workout Image"
               className={styles.workoutImg}
+              priority
             />
           ) : (
-            <p>No image available</p>
+            <div className={styles.loaderContainer}>
+              <div className={styles.loader}>
+                <div className={styles.loader_wheel}></div>
+                <div className={styles.loader_text}></div>
+              </div>
+            </div>
           )}
-          <Image
-            width={28}
-            height={28}
-            src="/edit-icon.png"
-            alt="edit"
-            className={styles.editIcon}
-          />
         </div>
       </section>
       <section className={styles.firstRow}>
@@ -457,7 +473,7 @@ export default function Page({ params }) {
           <div className={styles.goalWeight}>
             <h1 className={styles.weightNum}>
               {currentWeightEntry
-                ? `${currentWeightEntry.attributes.weight_kg} Kg`
+                ? `${currentWeightEntry.attributes.dumbbellWeight} Kg`
                 : "No data"}
             </h1>
             <h4 className={styles.weightText}>Current Weight</h4>
@@ -502,17 +518,19 @@ export default function Page({ params }) {
         <h3 className={styles.thirdRowHead}>Weight History</h3>
         {weights.data
           .sort(
-            (a, b) => new Date(b.attributes.date) - new Date(a.attributes.date)
+            (a, b) =>
+              new Date(b.attributes.dateOfWorkout) -
+              new Date(a.attributes.dateOfWorkout)
           ) // Sort by date, with the newest one on top
 
           .map((weight) => (
             <div key={weight.id} className={styles.thirdRowItem}>
               <div className={styles.item}>
                 <div className={styles.itemWeight}>
-                  {weight.attributes.weight_kg} Kg
+                  {weight.attributes.dumbbellWeight} Kg
                 </div>
                 <div className={styles.itemDate}>
-                  on {formatDate(weight.attributes.date)}
+                  on {formatDate(weight.attributes.dateOfWorkout)}
                 </div>
               </div>
               <div className={styles.item}>
