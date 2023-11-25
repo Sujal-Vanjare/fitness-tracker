@@ -2,7 +2,7 @@ export default async function Page() {
   return (
     <h1>
       goal
-      <div>{}</div>
+      <div>new </div>
     </h1>
   );
 }
