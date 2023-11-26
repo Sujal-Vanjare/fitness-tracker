@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
 import { fetchDataFromApi } from "@/utils/api";
+import { useFetchUser } from "@/utils/authContext";
+import { unsetToken } from "@/utils/auth";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -37,7 +39,13 @@ export default function Navbar() {
         console.error("Failed to fetch weight history:", error);
       });
   }, []);
+  // ////
 
+  const { user, loading } = useFetchUser();
+
+  const logout = () => {
+    unsetToken();
+  };
   return (
     <div>
       <div className={styles.mobileNav}>
@@ -155,15 +163,35 @@ export default function Navbar() {
             <DarkModeToggle />
           </div>
         </div>
-
-        <div className={styles.login}>
-          <Image
-            width={40}
-            height={40}
-            src="/profile.png"
-            alt="profile image"
-          />
-          <h1 className={styles.loginText}>login</h1>
+        <div className={styles.loginContainer}>
+          {!loading &&
+            (user ? (
+              <li>
+                <Link className={styles.profile} href="/profile"></Link>
+              </li>
+            ) : (
+              ""
+            ))}
+          {!loading &&
+            (user ? (
+              <div className={styles.logoutBtn} onClick={logout}>
+                Logout
+              </div>
+            ) : (
+              ""
+            ))}
+          {!loading && !user ? (
+            <>
+              <Link href="/sign-in" className={styles.signIn}>
+                Sign in
+              </Link>
+              <Link href="/sign-up" className={styles.signUp}>
+                Sign up
+              </Link>
+            </>
+          ) : (
+            ""
+          )}
         </div>
       </nav>
     </div>

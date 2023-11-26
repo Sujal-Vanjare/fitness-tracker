@@ -27,19 +27,6 @@
   font-weight: 600;
 }
 
-.login {
-  height: 72px;
-  display: flex;
-  align-items: center;
-  padding-left: 12px;
-  gap: 10px;
-}
-
-.loginText {
-  font-size: 19px;
-  font-weight: 500;
-}
-
 /*  */
 .darkModeButton {
   height: 56px;
@@ -141,6 +128,72 @@
   transform: rotate(180deg);
   transition: transform 0.4s ease;
 }
+/*  */
+
+.loginContainer {
+  display: flex;
+  gap: 12px;
+  padding: 0 0 16px 10px;
+}
+
+.signIn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  width: 70px;
+  height: 36px;
+  padding-bottom: 2px;
+  border-radius: 12px;
+  border: 2px solid white;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: transform 0.3s ease;
+}
+
+.signUp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  width: 70px;
+  height: 36px;
+  padding-bottom: 2px;
+  border-radius: 12px;
+  cursor: pointer;
+  opacity: 0.8;
+  background-color: #ddd6fe;
+  color: black;
+  transition: transform 0.3s ease;
+}
+
+.signIn:hover,
+.signUp:hover,
+.logoutBtn:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.signIn:active,
+.signUp:active,
+.logoutBtn:active {
+  transform: scale(0.8);
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  width: 70px;
+  height: 36px;
+  padding-bottom: 2px;
+  border-radius: 12px;
+  cursor: pointer;
+  background-color: #ffd1dc;
+  color: black;
+  transition: transform 0.3s ease;
+}
 
 /*  */
 .hide {
@@ -194,10 +247,7 @@
     height: 100%;
     padding: 0 24px 0 24px;
   }
-  .login {
-    height: 100%;
-    padding: 0 24px 0 24px;
-  }
+
   .goal,
   .weight {
     height: 56px;

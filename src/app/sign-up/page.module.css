@@ -1,0 +1,110 @@
+.page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: saturate(180%) blur(20px);
+  background: var(--nav-container-bg);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 500px;
+  padding: 32px;
+  border-radius: 16px;
+  background-color: var(--sign-bg);
+}
+
+.head {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 10px 0 32px;
+}
+
+.smallText {
+  font-size: 14px;
+  font-weight: 300;
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+.username,
+.password {
+  font-size: 15px;
+  padding: 14px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--sign-bg);
+  margin-bottom: 22px;
+}
+
+.passwordContainer {
+  position: relative;
+}
+.password {
+  width: 100%;
+}
+.eye {
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  filter: var(--icon-color);
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.submit {
+  padding: 14px;
+  border-radius: 10px;
+  margin: 10px 0;
+  background-color: #ddd6fe;
+  color: black;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.submit:hover {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+.submit:active {
+  transform: scale(1);
+}
+
+.forgot {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 300;
+  opacity: 0.8;
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+.forgot:hover {
+  opacity: 1;
+}
+
+.signUpContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  gap: 5px;
+}
+
+.newHere {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.signUp {
+  font-size: 14px;
+  color: #7976ff;
+  text-decoration: underline;
+}

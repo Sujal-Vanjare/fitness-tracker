@@ -2,6 +2,7 @@ import { Rubik } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import Navbar from "@/components/navbar/navbar";
+import { UserProvider } from "@/utils/authContext";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
