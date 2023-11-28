@@ -13,10 +13,14 @@
   display: flex;
   flex-direction: column;
   width: 400px;
-  height: 500px;
+  height: 600px;
   padding: 32px;
   border-radius: 16px;
   background-color: var(--sign-bg);
+}
+
+.logoutContainer {
+  height: 500px;
 }
 
 .head {
@@ -95,6 +99,13 @@
 
 .forgot:hover {
   opacity: 1;
+}
+
+.errorMsg {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 300;
+  color: red;
 }
 
 .signUpContainer {

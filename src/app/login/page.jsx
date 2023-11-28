@@ -15,6 +15,7 @@ export default function Page() {
   });
 
   const { user, loading } = useFetchUser();
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +30,12 @@ export default function Page() {
         password: data.password,
       }),
     });
-    setToken(responseData);
+    if (responseData.error) {
+      setErrorMsg("Invalid identifier or password. Please choose correct one.");
+    } else {
+      // Login successful
+      setToken(responseData);
+    }
   };
 
   const logout = () => {
@@ -112,9 +118,10 @@ export default function Page() {
             Login
           </button>
           <div className={styles.forgot}> Forgot Password?</div>
+          <div className={styles.errorMsg}>{errorMsg}</div>
           <div className={styles.signUpContainer}>
             <span className={styles.newHere}>New here?</span>{" "}
-            <Link className={styles.signUp} href="/sign-up">
+            <Link className={styles.signUp} href="/register">
               Sign Up now
             </Link>
           </div>

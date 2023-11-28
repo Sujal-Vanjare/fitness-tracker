@@ -8,7 +8,8 @@
   background: var(--nav-container-bg);
 }
 
-.form {
+.form,
+.logoutContainer {
   display: flex;
   flex-direction: column;
   width: 400px;
@@ -67,14 +68,19 @@
   border: none;
   transition: transform 0.3s ease;
   cursor: pointer;
+  text-align: center;
 }
 
-.submit:hover {
+.submit:hover,
+.home:hover,
+.logoutBtn:hover {
   opacity: 1;
   transform: scale(1.02);
 }
 
-.submit:active {
+.submit:active,
+.home:active,
+.logoutBtn:active {
   transform: scale(1);
 }
 
@@ -91,6 +97,12 @@
   opacity: 1;
 }
 
+.errorMsg {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 300;
+  color: red;
+}
 .signUpContainer {
   display: flex;
   justify-content: center;
@@ -107,4 +119,39 @@
   font-size: 14px;
   color: #7976ff;
   text-decoration: underline;
+}
+
+/*  */
+.wlcTxt {
+  margin-bottom: 20px;
+}
+
+.home {
+  padding: 14px;
+  border-radius: 10px;
+  margin: 10px 0;
+  background-color: #ddd6fe;
+  color: black;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.logoutBtn {
+  padding: 14px;
+  border-radius: 10px;
+  margin: 10px 0;
+  background-color: #fdaaaa;
+  color: black;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  margin-top: auto;
 }

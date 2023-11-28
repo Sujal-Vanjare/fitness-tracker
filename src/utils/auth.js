@@ -6,7 +6,7 @@ const Reload = () => {
   window.location.reload();
 };
 
-export const setToken = (data) => {
+export const setToken = async (data) => {
   if (typeof window === "undefined") {
     return;
   }

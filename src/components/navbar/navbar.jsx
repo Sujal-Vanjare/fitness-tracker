@@ -46,6 +46,13 @@ export default function Navbar() {
   const logout = () => {
     unsetToken();
   };
+  const initials = user
+    ? user
+        .split(" ")
+        .map((word) => word[0])
+        .join("")
+    : "";
+
   return (
     <div>
       <div className={styles.mobileNav}>
@@ -166,27 +173,25 @@ export default function Navbar() {
         <div className={styles.loginContainer}>
           {!loading &&
             (user ? (
-              <li>
-                <Link className={styles.profile} href="/profile"></Link>
-              </li>
-            ) : (
-              ""
-            ))}
-          {!loading &&
-            (user ? (
-              <div className={styles.logoutBtn} onClick={logout}>
-                Logout
-              </div>
+              <>
+                <div className={styles.profileImage}>{initials}</div>
+
+                <div className={styles.username}>{user}</div>
+
+                <div className={styles.logoutBtn} onClick={logout}>
+                  Logout
+                </div>
+              </>
             ) : (
               ""
             ))}
           {!loading && !user ? (
             <>
-              <Link href="/sign-in" className={styles.signIn}>
-                Sign in
+              <Link href="/login" className={styles.signIn}>
+                Login
               </Link>
-              <Link href="/sign-up" className={styles.signUp}>
-                Sign up
+              <Link href="/register" className={styles.signUp}>
+                Register
               </Link>
             </>
           ) : (
