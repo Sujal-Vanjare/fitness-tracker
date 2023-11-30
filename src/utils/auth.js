@@ -67,6 +67,9 @@ export const getIdFromLocalCookie = () => {
 export const getTokenFromLocalCookie = () => {
   return Cookies.get("jwt");
 };
+export const getUserId = () => {
+  return Cookies.get("id");
+};
 
 export const getTokenFromServerCookie = (req) => {
   if (!req.headers.cookie || "") {
@@ -94,4 +97,23 @@ export const getIdFromServerCookie = (req) => {
   }
   const id = idCookie.split("=")[1];
   return id;
+};
+
+// /////
+export const weightHistory = (endpoint) => {
+  const jwt = getTokenFromLocalCookie();
+  if (jwt) {
+    return fetcher(`${API_URL}${endpoint}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then((data) => {
+        return data.username;
+      })
+      .catch((error) => console.error(error));
+  } else {
+    return;
+  }
 };

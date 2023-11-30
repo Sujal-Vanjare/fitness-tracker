@@ -229,11 +229,18 @@
   padding: 10px;
   border-radius: 50px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .itemDlt:hover {
-  background-color: #474a69;
+  background-color: var(--dltHov);
   opacity: 1;
+  transform: scale(1.05);
+}
+
+.itemDlt:active {
+  background-color: var(--dltAct);
+  transform: scale(0.9s);
 }
 
 /*  */

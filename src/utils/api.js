@@ -1,10 +1,12 @@
-import { API_URL, STRAPI_API_TOKEN } from "./urls";
+import { getTokenFromLocalCookie } from "./auth";
+import { API_URL } from "./urls";
 
 export async function fetchDataFromApi(endpoints) {
+  const jwt = getTokenFromLocalCookie();
   const options = {
     method: "GET",
     headers: {
-      Authorization: "Bearer " + STRAPI_API_TOKEN,
+      Authorization: "Bearer " + jwt,
     },
   };
   const res = await fetch(`${API_URL}${endpoints}`, options);
@@ -15,11 +17,12 @@ export async function fetchDataFromApi(endpoints) {
 //
 
 export async function postDataToApi(endpoint, data) {
+  const jwt = getTokenFromLocalCookie();
   const options = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${STRAPI_API_TOKEN}`,
+      Authorization: "Bearer " + jwt,
     },
     body: JSON.stringify(data),
   };
@@ -41,10 +44,11 @@ export async function postDataToApi(endpoint, data) {
 //
 
 export async function deleteDataFromApi(endpoint) {
+  const jwt = getTokenFromLocalCookie();
   const options = {
     method: "DELETE",
     headers: {
-      Authorization: `Bearer ${STRAPI_API_TOKEN}`,
+      Authorization: "Bearer " + jwt,
     },
   };
 
@@ -62,6 +66,8 @@ export async function deleteDataFromApi(endpoint) {
   }
 }
 
+//
+
 export async function fetcher(url, options = {}) {
   let response;
   if (!options) {
@@ -72,3 +78,14 @@ export async function fetcher(url, options = {}) {
   const data = await response.json();
   return data;
 }
+
+// useEffect(() => {
+//   fetchDataFromApi("/api/users/me?populate=body_weights", jwtToken)
+//     .then((data) => {
+//       setBodyWeight(data.body_weights);
+//       // console.log(data.body_weights);
+//     })
+//     .catch((error) => {
+//       console.error("Failed to fetch weight history:", error);
+//     });
+// }, []);

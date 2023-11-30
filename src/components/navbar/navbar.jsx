@@ -7,9 +7,10 @@ import { usePathname } from "next/navigation";
 import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
 import { fetchDataFromApi } from "@/utils/api";
 import { useFetchUser } from "@/utils/authContext";
-import { unsetToken } from "@/utils/auth";
+import { getTokenFromLocalCookie, unsetToken } from "@/utils/auth";
 
 export default function Navbar() {
+  const jwt = getTokenFromLocalCookie();
   const pathname = usePathname();
 
   const [isVisible, setIsVisible] = useState(true);
@@ -31,7 +32,7 @@ export default function Navbar() {
 
   // fetching Workout List
   useEffect(() => {
-    fetchDataFromApi("/api/workouts")
+    fetchDataFromApi("/api/workout-lists", jwt)
       .then((data) => {
         setWorkoutList(data);
       })
@@ -100,9 +101,9 @@ export default function Navbar() {
             <span>Goal</span>
           </Link>
           <Link
-            href={"/weight"}
+            href={"/body-weight"}
             className={`${styles.goal} ${
-              pathname === "/weight" ? styles.pageActive : ""
+              pathname === "/body-weight" ? styles.pageActive : ""
             }`}
             onClick={removeMobileNavActiveClass}
           >
@@ -113,7 +114,7 @@ export default function Navbar() {
               className={styles.icon}
               alt="weight icon"
             />
-            <span>Weight</span>
+            <span>Body Weight</span>
           </Link>
           <div className={styles.workout} onClick={visibleButton}>
             <div className={styles.workoutText}>
