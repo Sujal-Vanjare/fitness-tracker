@@ -16,6 +16,7 @@ import {
   deleteDataFromApi,
   fetchDataFromApi,
   postDataToApi,
+  putDataToApi,
 } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { getUserId } from "@/utils/auth";
@@ -65,6 +66,10 @@ export default function Page() {
 
   const [bodyWeights, setBodyWeights] = useState([]); // Initialize weights as an object with a data property that is an empty array
   const [currentWeight, setCurrentWeight] = useState("..."); // Find the most recent weight entry
+  const [goalBodyWeight, setGoalBodyWeight] = useState("..."); // goal bodyWeight
+  const [isEditingGoalWeight, setIsEditingGoalWeight] = useState(false);
+  const [newGoalWeight, setNewGoalWeight] = useState("");
+
   const [loading, setLoading] = useState(true);
 
   const [date, setDate] = useState(""); // upload bodyWeight, date field
@@ -79,6 +84,7 @@ export default function Page() {
   useEffect(() => {
     fetchDataFromApi("/api/users/me?populate=body_weights")
       .then((data) => {
+        setGoalBodyWeight(data.goal_body_weight);
         const sortedBodyWeights = data.body_weights.sort(
           (a, b) => new Date(b.date) - new Date(a.date)
         );
@@ -172,6 +178,31 @@ export default function Page() {
     } finally {
       // Set loading to false after API call completes (whether successful or not)
       setLoading(false);
+    }
+  };
+
+  // Update Goal Weight
+
+  const handleAddGoalWeight = async () => {
+    // Check if goal weight is not empty
+    if (!newGoalWeight) {
+      console.error("Goal weight field is required.");
+      return;
+    }
+
+    const endpoint = `/api/users/${id}`;
+    const data = {
+      goal_body_weight: parseFloat(newGoalWeight), // Convert the value to a floating-point number
+    };
+
+    try {
+      const response = await putDataToApi(endpoint, data);
+      setGoalBodyWeight(response.goal_body_weight);
+      setIsEditingGoalWeight(false);
+
+      console.log("Goal body weight updated successfully:");
+    } catch (error) {
+      console.error("Error updating goal body weight:", error);
     }
   };
 
@@ -276,12 +307,10 @@ export default function Page() {
               onClick={() => setIsEditingGoalWeight(true)} // Click handler to show the edit section
             />
 
-            <h1 className={styles.weightNum}>
-              {/* {weightGoal ? `${weightGoal.attributes.weightGoal} Kg` : "..."} */}
-            </h1>
+            <h1 className={styles.weightNum}>{goalBodyWeight} Kg</h1>
             <h4 className={styles.weightText}>Goal Weight</h4>
 
-            {/* {isEditingGoalWeight && (
+            {isEditingGoalWeight && (
               <div className={styles.editGoalWeight}>
                 <Image
                   width={28}
@@ -306,10 +335,10 @@ export default function Page() {
                   src="/dlt.png"
                   className={styles.exitIcon}
                   alt="exit icon"
-                  onClick={() => setIsEditingGoalWeight(false)} // Wrap it in an arrow function
+                  onClick={() => setIsEditingGoalWeight(false)} /// Wrap it in an arrow function
                 />
               </div>
-            )} */}
+            )}
           </div>
           <div className={styles.goalWeight}>
             <h1 className={styles.weightNum}>{currentWeight} Kg</h1>

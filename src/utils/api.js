@@ -43,6 +43,33 @@ export async function postDataToApi(endpoint, data) {
 
 //
 
+export async function putDataToApi(endpoint, data) {
+  const jwt = getTokenFromLocalCookie();
+  const options = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + jwt,
+    },
+    body: JSON.stringify(data),
+  };
+
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, options);
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error(
+        `Failed to post data to the API: ${response.status} - ${response.statusText}`
+      );
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+//
+
 export async function deleteDataFromApi(endpoint) {
   const jwt = getTokenFromLocalCookie();
   const options = {
