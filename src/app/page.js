@@ -16,6 +16,7 @@ export default function Home() {
   return (
     <div className={styles.home}>
       <h1>Welcome Home!</h1>
+      <h2>is iit working</h2>
       {/* Add your home page content here */}
     </div>
   );
