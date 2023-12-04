@@ -20,6 +20,7 @@ import {
 } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { getUserId } from "@/utils/auth";
+import { redirect } from "next/navigation";
 
 ChartJS.register(
   LineElement,
@@ -63,6 +64,11 @@ function aggregateWeightByMonth(bodyWeights) {
 
 export default function Page() {
   const id = getUserId();
+  if (!id) {
+    // Redirect to login page if the user is not logged in
+    redirect("/login");
+    return null; // to prevent further execution of the component
+  }
 
   const [bodyWeights, setBodyWeights] = useState([]); // Initialize weights as an object with a data property that is an empty array
   const [currentWeight, setCurrentWeight] = useState("..."); // Find the most recent weight entry
@@ -84,12 +90,12 @@ export default function Page() {
   useEffect(() => {
     fetchDataFromApi("/api/users/me?populate=body_weights")
       .then((data) => {
-        setGoalBodyWeight(data.goal_body_weight);
+        setGoalBodyWeight(data.goal_body_weight || "...");
         const sortedBodyWeights = data.body_weights.sort(
           (a, b) => new Date(b.date) - new Date(a.date)
         );
         setBodyWeights(sortedBodyWeights);
-        setCurrentWeight(sortedBodyWeights[0].weight);
+        setCurrentWeight(sortedBodyWeights[0]?.weight || "...");
         setLoading(false); // Set loading to false once data is fetched
       })
       .catch((error) => {
@@ -105,7 +111,7 @@ export default function Page() {
       return;
     }
 
-    // Set loading to true before making the API call
+    // Set loading to true before making the API calls
     setLoading(true);
 
     const data = {

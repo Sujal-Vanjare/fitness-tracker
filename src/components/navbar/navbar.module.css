@@ -81,13 +81,15 @@
 }
 
 .listItem {
-  height: 56px;
-  padding: 12px 12px 12px 24px;
+  min-height: 58px;
+  height: max-content;
+  padding: 10px 5px 10px 24px;
   font-size: 17px;
   font-weight: 400;
   display: flex;
   align-items: center;
   gap: 14px;
+  border-bottom: 1px solid var(--input-bg);
 }
 
 .listItem:hover {
@@ -98,6 +100,7 @@
 .listItem:hover .listIcon {
   transform: scale(1.2);
   transition: transform 0.3s ease;
+  opacity: 1;
 }
 
 /*  */
@@ -114,6 +117,7 @@
   width: 25px;
   height: 25px;
   transition: transform 0.2s ease;
+  opacity: 0.8;
 }
 
 .downIcon {
@@ -131,10 +135,12 @@
 /*  */
 
 .loginContainer {
+  height: 100px;
   display: flex;
+
   align-items: center;
   gap: 12px;
-  padding: 0 0 16px 10px;
+  padding-left: 10px;
 }
 
 .signIn {
@@ -230,6 +236,33 @@
   transition: transform 0.3s ease;
 }
 
+.pageActive .listIcon {
+  transform: scale(1.2);
+  opacity: 1;
+  transition: transform 0.3s ease;
+}
+
+.workoutList {
+  overflow-y: auto;
+}
+
+.workoutList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.workoutList::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 6px;
+}
+
+.workoutList::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track);
+  border-radius: 10px;
+}
+.workoutList::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-hover);
+}
+
 @media screen and (max-width: 1919px) {
   .navbar {
     width: 269px;
@@ -291,7 +324,7 @@
     top: 70px;
     left: 430px;
     background-color: var(--tile-color);
-    width: 170px;
+    width: 240px;
     border-radius: 12px;
   }
 
@@ -390,5 +423,36 @@
     transition-property: top, transform;
     transition-delay: 0ms, 160ms;
     transition-duration: 200ms;
+  }
+}
+
+/*  */
+@media screen and (max-height: 1230px) {
+  .workoutList {
+    max-height: 600px;
+  }
+}
+
+@media screen and (max-height: 1045px) {
+  .workoutList {
+    max-height: 500px;
+  }
+}
+
+@media screen and (max-height: 945px) {
+  .workoutList {
+    max-height: 400px;
+  }
+}
+
+@media screen and (max-height: 845px) {
+  .workoutList {
+    max-height: 300px;
+  }
+}
+
+@media screen and (max-height: 745px) {
+  .workoutList {
+    max-height: 200px;
   }
 }

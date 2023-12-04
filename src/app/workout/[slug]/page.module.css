@@ -6,95 +6,25 @@
 
 .pageHead {
   display: flex;
-  width: 100%;
   justify-content: space-between;
-  padding: 25px;
-  margin-bottom: 20px;
-  border-radius: 16px;
-  background-color: var(--tile-color);
-}
-
-.headContainer {
-  padding: 20px 30px 20px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* loading animation start   */
-.loaderContainer {
-  width: 200px;
-  height: 200px;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 400px;
+  margin-bottom: 20px;
+  padding: 0 20px 0 20px;
+  background-color: var(--tile-color);
+  border-radius: 16px;
 }
-
-.loader {
-  width: 60px;
-}
-
-.loader_wheel {
-  animation: spin 1s infinite linear;
-  border: 2px solid rgba(30, 30, 30, 0.5);
-  border-left: 4px solid #fff;
-  border-radius: 50%;
-  height: 50px;
-  margin-bottom: 10px;
-  width: 50px;
-}
-
-.loader_text {
-  color: #fff;
-  font-family: arial, sans-serif;
-}
-
-.loader_text:after {
-  content: "Loading";
-  animation: load 2s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes load {
-  0% {
-    content: "Loading";
-  }
-  33% {
-    content: "Loading.";
-  }
-  67% {
-    content: "Loading..";
-  }
-  100% {
-    content: "Loading...";
-  }
-}
-
-/* loading animation end  */
 
 .workoutName {
-  position: relative;
   font-size: 36px;
   font-weight: 600;
-}
-
-.editInstruction {
-  font-size: 16px;
-  font-weight: 300;
-  opacity: 0.7;
+  padding-bottom: 20px;
 }
 
 .workoutImg {
-  width: 200px;
-  height: 200px;
+  width: 350px;
+  height: 350px;
 }
 
 .firstRow {
@@ -297,12 +227,23 @@
   align-items: center;
 }
 
+.repsContainer {
+  display: flex;
+  align-items: center;
+}
+
 .itemWeight {
   width: 140px;
   margin-left: 20px;
   font-size: 32px;
   font-weight: 500;
   opacity: 0.9;
+}
+
+.itemReps {
+  width: 70px;
+  font-size: 17px;
+  font-weight: 500;
 }
 
 .itemDate {
@@ -323,11 +264,18 @@
   padding: 10px;
   border-radius: 50px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .itemDlt:hover {
-  background-color: #474a69;
+  background-color: var(--dltHov);
   opacity: 1;
+  transform: scale(1.05);
+}
+
+.itemDlt:active {
+  background-color: var(--dltAct);
+  transform: scale(0.9);
 }
 
 /*  */
@@ -344,6 +292,23 @@
   .page {
     width: 730px;
   }
+  .pageHead {
+    height: 330px;
+    margin-bottom: 16px;
+    padding: 0 20px 0 20px;
+    border-radius: 12px;
+  }
+
+  .workoutName {
+    font-size: 32px;
+    padding-bottom: 16px;
+  }
+
+  .workoutImg {
+    width: 300px;
+    height: 300px;
+  }
+
   .firstRow {
     gap: 10px;
   }
@@ -459,39 +424,20 @@
   }
 
   .pageHead {
-    padding: 15px;
-    margin-bottom: 10px;
+    height: 270px;
+    margin-bottom: 15px;
+    padding: 0 20px 0 20px;
     border-radius: 12px;
-    background-color: var(--tile-color);
-  }
-
-  .headContainer {
-    padding: 10px 20px 5px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
   }
 
   .workoutName {
-    font-size: 30px;
-  }
-
-  .editInstruction {
-    font-size: 14px;
+    font-size: 26px;
+    padding-bottom: 14px;
   }
 
   .workoutImg {
-    width: 180px;
-    height: 180px;
-  }
-
-  .loaderContainer {
-    width: 180px;
-    height: 180px;
-  }
-
-  .loader {
-    width: 50px;
+    width: 240px;
+    height: 240px;
   }
 
   .firstRow {
@@ -503,6 +449,14 @@
     height: 114px;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 1fr;
+  }
+  .add {
+    width: 300px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .secondRowItem {
+    height: fit-content;
   }
 }
 
@@ -523,36 +477,22 @@
     width: 100%;
     padding: 52px 10px;
   }
-
-  .headContainer {
-    padding: 5px 10px 2px 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  .pageHead {
+    height: 250px;
+    margin-bottom: 10px;
+    padding: 0 14px 0 14px;
+    border-radius: 12px;
   }
 
   .workoutName {
-    font-size: 28px;
-  }
-
-  .editInstruction {
-    font-size: 12px;
+    font-size: 24px;
+    padding-bottom: 12px;
   }
 
   .workoutImg {
-    width: 160px;
-    height: 160px;
+    width: 220px;
+    height: 220px;
   }
-
-  .loaderContainer {
-    width: 160px;
-    height: 160px;
-  }
-
-  .loader {
-    width: 40px;
-  }
-
   .graph {
     width: 100%;
     height: 50vw;
@@ -569,55 +509,54 @@
   .currentWeight {
     grid-area: 1 / 1 / 2 / 3;
   }
-}
-
-@media screen and (max-width: 460px) {
-  .add {
+  .repsContainer {
     display: flex;
     flex-direction: column;
     align-items: normal;
     gap: 10px;
   }
+  .itemReps {
+    margin-left: 14px;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .pageHead {
+    height: 220px;
+    padding: 0 14px 0 14px;
+    border-radius: 12px;
+  }
+
+  .workoutName {
+    font-size: 22px;
+    padding-bottom: 10px;
+  }
+
+  .workoutImg {
+    width: 200px;
+    height: 200px;
+  }
+  .add {
+    width: 200px;
+    gap: 14px;
+  }
 
   .secondRowItem {
     padding: 0 20px;
-    height: 100px;
+    height: 150px;
     border-radius: 16px;
   }
 }
 
 @media screen and (max-width: 355px) {
-  .headContainer {
-    padding: 5px 10px 2px 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .workoutName {
-    font-size: 25px;
-  }
-
-  .editInstruction {
-    font-size: 12px;
-  }
-
-  .workoutImg {
-    width: 140px;
-    height: 140px;
-  }
-
-  .loaderContainer {
-    width: 140px;
-    height: 140px;
-  }
-
-  .loader {
-    width: 20px;
-  }
-
   .itemWeight {
     margin-left: 0px;
+  }
+  .itemReps {
+    margin-left: 0px;
+  }
+  .itemDate {
+    margin-left: 0;
   }
   .thirdRowItem {
     padding-left: 14px;

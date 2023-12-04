@@ -60,7 +60,7 @@ export async function putDataToApi(endpoint, data) {
       return await response.json();
     } else {
       throw new Error(
-        `Failed to post data to the API: ${response.status} - ${response.statusText}`
+        `Failed to put data to the API: ${response.status} - ${response.statusText}`
       );
     }
   } catch (error) {

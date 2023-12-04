@@ -1,7 +1,5 @@
 "use client";
-import styles from "./page.module.css";
 import { Line } from "react-chartjs-2";
-
 import {
   Chart as ChartJS,
   LineElement,
@@ -12,14 +10,17 @@ import {
   Tooltip,
   Filler,
 } from "chart.js";
+import styles from "./page.module.css";
 import Image from "next/image";
 import {
   deleteDataFromApi,
   fetchDataFromApi,
-  getWeightsHistory,
   postDataToApi,
+  putDataToApi,
 } from "@/utils/api";
 import { useEffect, useState } from "react";
+import { getUserId } from "@/utils/auth";
+import { redirect } from "next/navigation";
 
 ChartJS.register(
   LineElement,
@@ -31,11 +32,11 @@ ChartJS.register(
   Filler
 );
 
-function aggregateWeightByMonth(weightData) {
+function aggregateWeightByMonth(bodyWeights) {
   const aggregatedData = {};
 
-  weightData.forEach((weightEntry) => {
-    const date = new Date(weightEntry.attributes.dateOfWorkout);
+  bodyWeights.forEach((bodyWeightsEntry) => {
+    const date = new Date(bodyWeightsEntry.date);
     const year = date.getFullYear();
     const month = date.toLocaleString("default", { month: "short" }); // Get short month name, e.g., "Jan"
     const day = date.getDate();
@@ -45,7 +46,7 @@ function aggregateWeightByMonth(weightData) {
       aggregatedData[key] = { sum: 0, count: 0 };
     }
 
-    aggregatedData[key].sum += weightEntry.attributes.dumbbellWeight;
+    aggregatedData[key].sum += bodyWeightsEntry.weight;
     aggregatedData[key].count++;
   });
 
@@ -62,113 +63,193 @@ function aggregateWeightByMonth(weightData) {
 }
 
 export default function Page({ params }) {
-  const [weight, setWeight] = useState(""); // State variable for weight
-  const [newGoalWeight, setNewGoalWeight] = useState("");
-  const [weightGoal, setWeightGoal] = useState(""); // State variable for weight
+  const pluralize = require("pluralize"); // Import the pluralize library
+
+  const originalSlug = params.slug; // Assuming params.slug is "barbell_bench_press"
+
+  // Replace hyphens with underscores
+  const underscoreSlug = originalSlug.replace(/-/g, "_");
+
+  // Pluralize the slug
+  const pluralizedSlug = pluralize(originalSlug);
+
+  //gettiing user id
+  const id = getUserId();
+  if (!id) {
+    // Redirect to login page if the user is not logged in
+    redirect("/login");
+    return null; // to prevent further execution of the component
+  }
+
+  const [bodyWeights, setBodyWeights] = useState([]); // Initialize weights as an object with a data property that is an empty array
+  const [currentWeight, setCurrentWeight] = useState("..."); // Find the most recent weight entry
+  const [goalBodyWeight, setGoalBodyWeight] = useState("..."); // goal bodyWeight
   const [isEditingGoalWeight, setIsEditingGoalWeight] = useState(false);
+  const [newGoalWeight, setNewGoalWeight] = useState("");
 
-  const [date, setDate] = useState(""); // State variable for date
-  const [weights, setWeights] = useState({ data: [] }); // Initialize weights as an object with a data property that is an empty array
-  const [workout, setWorkout] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  ///// fetching Workout name and image
+  const [date, setDate] = useState(""); // upload bodyWeight, date field
+  const [reps, setReps] = useState(""); // upload bodyWeight, reps field
+  const [weight, setWeight] = useState(""); // upload bodyWeight , weight field
+  // format date
+  function formatDate(inputDate) {
+    const options = { day: "2-digit", month: "long", year: "numeric" };
+    const date = new Date(inputDate);
+    return date.toLocaleDateString(undefined, options);
+  }
+  // convert slug into Heading
+  function convertSlugToTitle(slug) {
+    const words = slug.split("-");
+    const title = words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+    return title;
+  }
+  const convertedTitle = convertSlugToTitle(originalSlug);
+  // fetching weight history
   useEffect(() => {
-    fetchDataFromApi(
-      `/api/workouts?filters[slug][$eq]=${params.slug}&populate=workoutImg`
-    )
+    fetchDataFromApi(`/api/users/me?populate=${underscoreSlug}`)
       .then((data) => {
-        setWorkout(data);
+        setGoalBodyWeight(data[`goal_${underscoreSlug}`] || "...");
+        const sortedBodyWeights = data[underscoreSlug].sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+
+        setBodyWeights(sortedBodyWeights);
+        setCurrentWeight(sortedBodyWeights[0]?.weight || "...");
+        setLoading(false); // Set loading to false once data is fetched
       })
       .catch((error) => {
-        console.error("Failed to fetch Workout name and image:", error);
+        console.error("Failed to fetch weight history:", error);
       });
-  }, [params.slug]);
+  }, []);
 
-  // Assuming workout is an array with one element
-  const workoutName =
-    workout && workout.data && workout.data[0] && workout.data[0].attributes
-      ? workout.data[0].attributes.workoutName
-      : "...";
-
-  const workoutImg =
-    workout &&
-    workout.data &&
-    workout.data[0] &&
-    workout.data[0].attributes &&
-    workout.data[0].attributes.workoutImg &&
-    workout.data[0].attributes.workoutImg.data.attributes
-      ? workout.data[0].attributes.workoutImg.data.attributes.url
-      : null;
-
-  const workoutId =
-    workout && workout.data && workout.data[0] && workout.data[0].id;
-
-  /////////
-
-  // Find the most recent weight entry
-  const currentWeightEntry = weights.data[0];
-
-  // Function to calculate weight difference
-  const calculateWeightDifference = (weightHistory) => {
-    const validWeights = weightHistory.filter(
-      (weight) =>
-        weight.attributes && weight.attributes.dumbbellWeight !== undefined
-    );
-    validWeights.sort(
-      (a, b) =>
-        new Date(b.attributes.dateOfWorkout) -
-        new Date(a.attributes.dateOfWorkout)
-    );
-
-    if (validWeights.length >= 2) {
-      const currentWeight = validWeights[0].attributes.dumbbellWeight;
-      const previousWeight = validWeights[1].attributes.dumbbellWeight;
-      const difference = currentWeight - previousWeight;
-
-      if (!isNaN(difference)) {
-        if (difference > 0) {
-          return (
-            <div className={styles.howMuchNeed}>
-              <h1 className={styles.weightNum}>{Math.abs(difference)} Kg</h1>
-              <h4 className={styles.weightText}>
-                <span className={styles.gainedText}>Gained </span>
-                this Month
-              </h4>
-            </div>
-          );
-        } else if (difference < 0) {
-          return (
-            <div className={styles.howMuchNeed}>
-              <h1 className={styles.weightNum}>{Math.abs(difference)} Kg</h1>
-              <h4 className={styles.weightText}>
-                <span className={styles.loosedText}>Lost</span> this Month
-              </h4>
-            </div>
-          );
-        } else {
-          return (
-            <div className={styles.howMuchNeed}>
-              <h1 className={styles.weightNum}>Maintained weight</h1>
-            </div>
-          );
-        }
-      }
+  // add New weight history item
+  const handleAddWeight = async () => {
+    // Check if weight and date are not empty
+    if (!weight || !date) {
+      console.error("Weight and date fields are required.");
+      return;
     }
 
-    return (
-      <div>
-        <h1 className={styles.weightNum}>...</h1>
-      </div>
-    );
+    // Set loading to true before making the API calls
+    setLoading(true);
+
+    const data = {
+      data: {
+        weight: weight,
+        date: date,
+        reps: reps,
+        user: {
+          connect: [{ id }],
+        },
+      },
+    };
+
+    try {
+      // Make the API call to add a new weight entry
+      const response = await postDataToApi(`/api/${pluralizedSlug}`, data);
+
+      // Fetch the updated weight history after adding a new entry
+      const updatedData = await fetchDataFromApi(
+        `/api/users/me?populate=${underscoreSlug}`
+      );
+
+      // Sort the updated data by date in descending order
+
+      const sortedBodyWeights = updatedData[underscoreSlug].sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+
+      // Update the state with the sorted data
+      setBodyWeights(sortedBodyWeights);
+      setCurrentWeight(sortedBodyWeights[0]?.weight || "...");
+
+      // Clear the input fields after successfully adding the weight
+      setWeight("");
+      setReps("");
+      setDate("");
+    } catch (error) {
+      console.error("Error adding weight entry:", error);
+    } finally {
+      // Set loading to false after API call completes (whether successful or not)
+      setLoading(false);
+    }
   };
 
-  // Assuming weights.data holds the weight entries in reverse chronological order (most recent on top)
-  const weightDifference = calculateWeightDifference(weights.data);
+  // delete weight history item
+  const handleDeleteWeight = async (weightId) => {
+    try {
+      // Set loading to true before making the API call
+      setLoading(true);
 
-  //
+      const response = await deleteDataFromApi(
+        `/api/${pluralizedSlug}/${weightId}`
+      );
+      if (response.data) {
+        console.log("Weight entry deleted successfully");
 
-  const chartData = aggregateWeightByMonth(weights.data);
+        // Fetch the updated weight history after deleting the entry
+        const updatedData = await fetchDataFromApi(
+          `/api/users/me?populate=${underscoreSlug}`
+        );
 
+        // Sort the updated data by date in descending order
+        const sortedBodyWeights = updatedData[underscoreSlug].sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+
+        // Update the state with the sorted data
+        setBodyWeights(sortedBodyWeights);
+        setCurrentWeight(sortedBodyWeights[0]?.weight || "...");
+      } else {
+        console.error("Failed to delete weight entry");
+      }
+    } catch (error) {
+      console.error("Error deleting weight entry:", error);
+    } finally {
+      // Set loading to false after API call completes (whether successful or not)
+      setLoading(false);
+    }
+  };
+
+  // Update Goal Weight
+
+  const handleAddGoalWeight = async () => {
+    // Check if goal weight is not empty
+    if (!newGoalWeight) {
+      console.error("Goal weight field is required.");
+      return;
+    }
+
+    const endpoint = `/api/users/${id}`;
+    const data = {
+      [`goal_${underscoreSlug}`]: parseFloat(newGoalWeight), // Convert the value to a floating-point number
+    };
+
+    try {
+      const response = await putDataToApi(endpoint, data);
+      setGoalBodyWeight(response[`goal_${underscoreSlug}`]);
+      setIsEditingGoalWeight(false);
+
+      console.log("Goal  weight updated successfully:");
+    } catch (error) {
+      console.error("Error updating goal body weight:", error);
+    }
+  };
+
+  // ////  graph code
+  const chartData = aggregateWeightByMonth(bodyWeights);
+
+  // Calculate weight difference between the current month and the previous month
+  const currentMonthWeight = chartData[0]?.weight || 0;
+  const previousMonthWeight = chartData[1]?.weight || 0;
+  const weightDifference = currentMonthWeight - previousMonthWeight;
+  const formattedWeightDifference =
+    weightDifference % 1 !== 0
+      ? weightDifference.toFixed(1)
+      : weightDifference.toFixed(0);
   chartData.reverse();
 
   const data = {
@@ -242,183 +323,19 @@ export default function Page({ params }) {
     options.scales.x.ticks.font.size = 12;
   }
 
-  // format date
-  function formatDate(inputDate) {
-    const options = { day: "2-digit", month: "long", year: "numeric" };
-    const date = new Date(inputDate);
-    return date.toLocaleDateString(undefined, options);
-  }
-
-  //  fetching weight goal
-  useEffect(() => {
-    fetchDataFromApi("/api/weight-goals")
-      .then((data) => {
-        if (data.data && data.data.length > 0) {
-          // Sort the data array by updatedAt in descending order
-          const sortedData = data.data.sort((a, b) => {
-            return (
-              new Date(b.attributes.updatedAt) -
-              new Date(a.attributes.updatedAt)
-            );
-          });
-
-          const latestWeightGoal = sortedData[0]; // Get the latest item
-          setWeightGoal(latestWeightGoal); // Set the latest item as the state
-        } else {
-          console.log("No weight goals found in the data.");
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to fetch goal weight:", error);
-      });
-  }, []);
-
-  // Function to handle the submission of the new goal weight
-  const handleAddGoalWeight = async () => {
-    if (newGoalWeight.trim() === "") {
-      console.error("Goal weight field is required.");
-      return;
-    }
-
-    const data = {
-      data: {
-        weightGoal: parseFloat(newGoalWeight),
-      },
-    };
-
-    try {
-      const response = await postDataToApi("/api/weight-goals", data);
-
-      // After successfully adding a new goal weight, fetch the latest goal weight
-      fetchDataFromApi("/api/weight-goals").then((data) => {
-        if (data.data && data.data.length > 0) {
-          const sortedData = data.data.sort((a, b) => {
-            return (
-              new Date(b.attributes.updatedAt) -
-              new Date(a.attributes.updatedAt)
-            );
-          });
-          const latestWeightGoal = sortedData[0];
-          setWeightGoal(latestWeightGoal); // Update the state with the latest goal weight
-        }
-      });
-
-      setNewGoalWeight("");
-      setIsEditingGoalWeight(false);
-    } catch (error) {
-      console.error("Error adding goal weight:", error);
-    }
-  };
-
-  // fetching weight history
-  useEffect(() => {
-    fetchDataFromApi(
-      `/api/dumbbell-weights?populate=*&[filters][workout_list][slug][$eq]=${params.slug}`
-    )
-      .then((data) => {
-        setWeights(data);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch weight history:", error);
-      });
-  }, []);
-
-  /////// add New weight history item
-  const handleAddWeight = async () => {
-    // Check if weight and date are not empty
-    if (!weight || !date) {
-      console.error("Weight and date fields are required.");
-      return;
-    }
-
-    const data = {
-      data: {
-        dumbbellWeight: weight, // Use the weight state variable
-        dateOfWorkout: date, // Use the date state variable
-        workout_list: {
-          id: workoutId,
-        },
-      },
-    };
-
-    try {
-      const response = await postDataToApi("/api/dumbbell-weights", data);
-
-      // Optionally, you can fetch the updated weight history after adding a new entry
-      fetchDataFromApi(
-        `/api/dumbbell-weights?populate=*&[filters][workout_list][slug][$eq]=${params.slug}`
-      ).then((data) => {
-        setWeights(data);
-      });
-
-      // Clear the input fields after successfully adding the weight
-      setWeight("");
-      setDate("");
-    } catch (error) {
-      console.error("Error adding weight entry:", error);
-    }
-  };
-
-  // delete weight history item
-  const handleDeleteWeight = async (weightId) => {
-    try {
-      const response = await deleteDataFromApi(
-        `/api/dumbbell-weights/${weightId}`
-      );
-      if (response.data) {
-        console.log("Weight entry deleted successfully");
-        // Optionally, you can fetch the updated weight history after deleting the entry
-        fetchDataFromApi(
-          `/api/dumbbell-weights?populate=*&[filters][workout_list][slug][$eq]=${params.slug}`
-        ).then((data) => {
-          setWeights(data);
-        });
-      } else {
-        console.error("Failed to delete weight entry");
-      }
-    } catch (error) {
-      console.error("Error deleting weight entry:", error);
-    }
-  };
-
   return (
     <div className={styles.page}>
       <section className={styles.pageHead}>
-        <div className={styles.headContainer}>
-          <div className={styles.workoutName}>
-            {workoutName}
-            <Image
-              width={28}
-              height={28}
-              src="/edit-icon.png"
-              alt="edit"
-              className={styles.editIcon}
-            />
-          </div>
-          <div className={styles.editInstruction}>
-            &#40; You can edit the Workout Name and Workout Image if you wish.
-            Just click on the edit icon at the top &#41;
-          </div>
-        </div>
-        <div className={styles.workoutImgContainer}>
-          {workoutImg !== null ? (
-            <Image
-              width={500}
-              height={500}
-              src={workoutImg}
-              alt="Workout Image"
-              className={styles.workoutImg}
-              priority
-            />
-          ) : (
-            <div className={styles.loaderContainer}>
-              <div className={styles.loader}>
-                <div className={styles.loader_wheel}></div>
-                <div className={styles.loader_text}></div>
-              </div>
-            </div>
-          )}
-        </div>
+        <div className={styles.workoutName}> {convertedTitle}</div>
+
+        <Image
+          width={500}
+          height={500}
+          src={`/${params.slug}.png`}
+          alt="Workout Image"
+          className={styles.workoutImg}
+          priority
+        />
       </section>
       <section className={styles.firstRow}>
         <div className={styles.graph}>
@@ -435,9 +352,7 @@ export default function Page({ params }) {
               onClick={() => setIsEditingGoalWeight(true)} // Click handler to show the edit section
             />
 
-            <h1 className={styles.weightNum}>
-              {weightGoal ? `${weightGoal.attributes.weightGoal} Kg` : "..."}
-            </h1>
+            <h1 className={styles.weightNum}>{goalBodyWeight} Kg</h1>
             <h4 className={styles.weightText}>Goal Weight</h4>
 
             {isEditingGoalWeight && (
@@ -465,21 +380,39 @@ export default function Page({ params }) {
                   src="/dlt.png"
                   className={styles.exitIcon}
                   alt="exit icon"
-                  onClick={() => setIsEditingGoalWeight(false)} // Wrap it in an arrow function
+                  onClick={() => setIsEditingGoalWeight(false)} /// Wrap it in an arrow function
                 />
               </div>
             )}
           </div>
           <div className={styles.goalWeight}>
-            <h1 className={styles.weightNum}>
-              {currentWeightEntry
-                ? `${currentWeightEntry.attributes.dumbbellWeight} Kg`
-                : "No data"}
-            </h1>
+            <h1 className={styles.weightNum}>{currentWeight} Kg</h1>
             <h4 className={styles.weightText}>Current Weight</h4>
           </div>
           <div className={styles.howMuchNeed}>
-            <section>{weightDifference}</section>
+            <div className={styles.howMuchNeed}>
+              <h1 className={styles.weightNum}>
+                {formattedWeightDifference} Kg
+              </h1>
+              <h4 className={styles.weightText}>
+                <span
+                  className={
+                    weightDifference > 0
+                      ? styles.gainedText
+                      : weightDifference < 0
+                      ? styles.loosedText
+                      : styles.maintainedText
+                  }
+                >
+                  {weightDifference > 0
+                    ? "Gained"
+                    : weightDifference < 0
+                    ? "Loosed"
+                    : "Maintained"}
+                </span>{" "}
+                this Month
+              </h4>
+            </div>
           </div>
         </div>
       </section>
@@ -493,11 +426,23 @@ export default function Page({ params }) {
                 className={styles.weightAdd}
                 type="number"
                 name="weight"
-                placeholder="00.00 Kg"
+                placeholder="00.00"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
               />
             </div>
+            <div className={styles.weightInput}>
+              <p>Reps :</p>
+              <input
+                className={styles.weightAdd}
+                type="number"
+                name="reps"
+                placeholder="00"
+                value={reps}
+                onChange={(e) => setReps(e.target.value)}
+              />
+            </div>
+
             <div className={styles.dateInput}>
               <p>Date :</p>
               <input
@@ -516,21 +461,24 @@ export default function Page({ params }) {
       </section>
       <section className={styles.thirdRow}>
         <h3 className={styles.thirdRowHead}>Weight History</h3>
-        {weights.data
-          .sort(
-            (a, b) =>
-              new Date(b.attributes.dateOfWorkout) -
-              new Date(a.attributes.dateOfWorkout)
-          ) // Sort by date, with the newest one on top
 
-          .map((weight) => (
-            <div key={weight.id} className={styles.thirdRowItem}>
+        {loading ? (
+          <div className={styles.thirdRowItem}>Updating...</div>
+        ) : (
+          bodyWeights.map((weightData) => (
+            <div key={weightData.id} className={styles.thirdRowItem}>
               <div className={styles.item}>
-                <div className={styles.itemWeight}>
-                  {weight.attributes.dumbbellWeight} Kg
+                <div className={styles.repsContainer}>
+                  <span className={styles.itemWeight}>
+                    {weightData.weight} Kg
+                  </span>
+                  <span className={styles.itemReps}>
+                    {weightData.reps} reps
+                  </span>
                 </div>
+
                 <div className={styles.itemDate}>
-                  on {formatDate(weight.attributes.dateOfWorkout)}
+                  on {formatDate(weightData.date)}
                 </div>
               </div>
               <div className={styles.item}>
@@ -541,12 +489,13 @@ export default function Page({ params }) {
                     src="/dlt.png"
                     className={styles.dltIcon}
                     alt="workout icon"
-                    onClick={() => handleDeleteWeight(weight.id)}
+                    onClick={() => handleDeleteWeight(weightData.id)}
                   />
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        )}
       </section>
     </div>
   );

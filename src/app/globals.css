@@ -31,6 +31,10 @@ body {
   --input-border: #f5f5f5;
   --dltHov: #3e3e3e;
   --dltAct: #565656;
+
+  --scrollbar-track: #424242;
+  --scrollbar-thumb: #686868;
+  --scrollbar-hover: #a1a1a1;
 }
 [data-mode="light"] {
   --theme: light;
@@ -53,6 +57,10 @@ body {
   --input-border: #d6d6d6;
   --dltHov: #cccccc;
   --dltAct: #eeeeee;
+
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-hover: #787878;
 }
 body {
   color: var(--main-color);

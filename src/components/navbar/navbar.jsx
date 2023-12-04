@@ -144,27 +144,29 @@ export default function Navbar() {
           >
             {workoutList &&
               workoutList.data &&
-              workoutList.data.map((workout) => (
-                <Link
-                  key={workout.id}
-                  href={`/workout/${workout.attributes.slug}`}
-                  className={`${styles.listItem} ${
-                    pathname === `/workout/${workout.attributes.slug}`
-                      ? styles.pageActive
-                      : ""
-                  }`}
-                  onClick={removeMobileNavActiveClass}
-                >
-                  <Image
-                    width={100}
-                    height={100}
-                    src="/dumbbell.png"
-                    className={styles.listIcon}
-                    alt="workout icon"
-                  />
-                  <span>{workout.attributes.workoutName}</span>
-                </Link>
-              ))}
+              workoutList.data
+                .sort((a, b) => a.attributes.num - b.attributes.num)
+                .map((workout) => (
+                  <Link
+                    key={workout.id}
+                    href={`/workout/${workout.attributes.slug}`}
+                    className={`${styles.listItem} ${
+                      pathname === `/workout/${workout.attributes.slug}`
+                        ? styles.pageActive
+                        : ""
+                    }`}
+                    onClick={removeMobileNavActiveClass}
+                  >
+                    <Image
+                      width={100}
+                      height={100}
+                      src={`/workout-icons/${workout.attributes.slug}-icon.png`}
+                      className={styles.listIcon}
+                      alt="workout icon"
+                    />
+                    <span>{workout.attributes.workoutName}</span>
+                  </Link>
+                ))}
           </ul>
 
           <div className={styles.darkModeButton}>

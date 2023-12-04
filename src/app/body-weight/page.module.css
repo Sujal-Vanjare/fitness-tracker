@@ -240,7 +240,7 @@
 
 .itemDlt:active {
   background-color: var(--dltAct);
-  transform: scale(0.9s);
+  transform: scale(0.9);
 }
 
 /*  */
