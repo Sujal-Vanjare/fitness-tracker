@@ -322,8 +322,9 @@
   .workoutList {
     position: absolute;
     top: 70px;
-    left: 430px;
+    left: 435px;
     background-color: var(--tile-color);
+    border: 1px solid var(--input-bg);
     width: 240px;
     border-radius: 12px;
   }
@@ -335,6 +336,21 @@
   }
   .downIcon {
     margin-left: 8px;
+  }
+  .loginContainer {
+    height: 100%;
+
+    gap: 10px;
+    padding-left: 0px;
+    padding-right: 16px;
+  }
+}
+@media screen and (max-width: 942px) and (min-width: 825px) {
+  .profileImage {
+    display: none;
+  }
+  .loginContainer {
+    padding-right: 10px;
   }
 }
 
@@ -424,35 +440,117 @@
     transition-delay: 0ms, 160ms;
     transition-duration: 200ms;
   }
-}
 
-/*  */
-@media screen and (max-height: 1230px) {
-  .workoutList {
-    max-height: 600px;
+  .loginContainer {
+    height: 60px;
+
+    gap: 12px;
+    padding-left: 12px;
+    padding-right: 0px;
   }
 }
 
-@media screen and (max-height: 1045px) {
-  .workoutList {
-    max-height: 500px;
+/*  workout list height vertical nav*/
+@media screen and (max-width: 2560px) and (min-width: 996px) {
+  @media screen and (max-height: 1230px) {
+    .workoutList {
+      max-height: 600px;
+    }
+  }
+
+  @media screen and (max-height: 1045px) {
+    .workoutList {
+      max-height: 500px;
+    }
+  }
+
+  @media screen and (max-height: 945px) {
+    .workoutList {
+      max-height: 400px;
+    }
+  }
+
+  @media screen and (max-height: 845px) {
+    .workoutList {
+      max-height: 300px;
+    }
+  }
+
+  @media screen and (max-height: 745px) {
+    .workoutList {
+      max-height: 200px;
+    }
   }
 }
 
-@media screen and (max-height: 945px) {
-  .workoutList {
-    max-height: 400px;
+/* workout list height  for horizontal nav*/
+@media screen and (max-width: 995px) and (min-width: 825px) {
+  @media screen and (max-height: 990px) {
+    .workoutList {
+      max-height: 700px;
+    }
+  }
+
+  @media screen and (max-height: 845px) {
+    .workoutList {
+      max-height: 600px;
+    }
+  }
+
+  @media screen and (max-height: 745px) {
+    .workoutList {
+      max-height: 500px;
+    }
+  }
+
+  @media screen and (max-height: 645px) {
+    .workoutList {
+      max-height: 400px;
+    }
+  }
+
+  @media screen and (max-height: 545px) {
+    .workoutList {
+      max-height: 300px;
+    }
   }
 }
 
-@media screen and (max-height: 845px) {
-  .workoutList {
-    max-height: 300px;
+/* workout list height  for horizontal mobile nav*/
+@media screen and (max-width: 824px) and (min-width: 200px) {
+  @media screen and (max-height: 1215px) {
+    .workoutList {
+      max-height: 700px;
+    }
   }
-}
 
-@media screen and (max-height: 745px) {
-  .workoutList {
-    max-height: 200px;
+  @media screen and (max-height: 1110px) {
+    .workoutList {
+      max-height: 600px;
+    }
+  }
+
+  @media screen and (max-height: 1010px) {
+    .workoutList {
+      max-height: 500px;
+    }
+  }
+
+  @media screen and (max-height: 910px) {
+    .workoutList {
+      max-height: 400px;
+    }
+  }
+
+  @media screen and (max-height: 810px) {
+    .workoutList {
+      max-height: 300px;
+    }
+  }
+
+  @media screen and (max-height: 710px) {
+    .workoutList {
+      max-height: 200px;
+    }
   }
 }
