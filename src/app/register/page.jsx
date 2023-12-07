@@ -25,8 +25,13 @@ export default function Page() {
   });
 
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [loadingRegister, setLoadingRegister] = useState(false); // for register loading
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingRegister(true); // Set loading to true when registration starts
+
     try {
       const responseData = await fetcher(`${API_URL}/api/auth/local/register`, {
         headers: {
@@ -50,6 +55,8 @@ export default function Page() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoadingRegister(false); // Set loading to false after registration completes (whether successful or not)
     }
   };
 
@@ -64,14 +71,6 @@ export default function Page() {
 
   return (
     <div className={styles.page}>
-      {!loading &&
-        (user ? (
-          <li>
-            <Link className={styles.profile} href="/"></Link>
-          </li>
-        ) : (
-          ""
-        ))}
       {!loading &&
         (user ? (
           <div className={styles.logoutContainer}>
@@ -134,9 +133,12 @@ export default function Page() {
               className={styles.eye}
             />
           </div>
-
-          <button className={styles.submit} type="submit">
-            Register
+          <button
+            className={styles.submit}
+            type="submit"
+            disabled={loadingRegister}
+          >
+            {loadingRegister ? "Registering..." : "Register"}
           </button>
           {/* <div className={styles.forgot}> Forgot Password?</div> */}
           <div className={styles.errorMsg}>{errorMsg}</div>

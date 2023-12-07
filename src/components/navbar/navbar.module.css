@@ -35,7 +35,7 @@
   align-items: center;
 }
 
-.goal,
+.about,
 .weight {
   height: 56px;
   padding: 12px;
@@ -66,14 +66,14 @@
   align-items: center;
 }
 
-.goal:hover,
+.about:hover,
 .weight:hover,
 .workout:hover {
   background: var(--nav-item-hover);
   border-radius: 12px;
 }
 
-.goal:hover .icon,
+.about:hover .icon,
 .weight:hover .icon,
 .workout:hover .icon {
   transform: scale(1.2);
@@ -152,7 +152,7 @@
   height: 36px;
   padding-bottom: 2px;
   border-radius: 12px;
-  border: 2px solid white;
+  border: 2px solid var(--button-bg);
   cursor: pointer;
   opacity: 0.8;
   transition: transform 0.3s ease;
@@ -299,7 +299,7 @@
     padding: 0 24px 0 24px;
   }
 
-  .goal,
+  .about,
   .weight {
     height: 56px;
     padding: 10px;

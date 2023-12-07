@@ -62,7 +62,7 @@ export default function Navbar() {
           className={styles.mobileNavHead}
           onClick={removeMobileNavActiveClass}
         >
-          <h4>Workout Tracker</h4>
+          <h4>Fitness Tracker</h4>
         </Link>
         <div
           className={styles.menuIconContainer}
@@ -82,27 +82,27 @@ export default function Navbar() {
       <nav className={`${styles.navbar}  ${navActive ? "" : styles.active} `}>
         <div className={styles.horizontalNav}>
           <Link href={"/"} className={styles.top}>
-            <h1 className={styles.head}> Workout Tracker</h1>
+            <h1 className={styles.head}>Fitness Tracker</h1>
           </Link>
           <Link
-            href={"/goal"}
-            className={`${styles.goal} ${
-              pathname === "/goal" ? styles.pageActive : ""
+            href={"/about"}
+            className={`${styles.about} ${
+              pathname === "/about" ? styles.pageActive : ""
             }`}
             onClick={removeMobileNavActiveClass}
           >
             <Image
               width={100}
               height={100}
-              src="/goal.png"
+              src="/about.png"
               className={styles.icon}
-              alt="goal icon"
+              alt="about icon"
             />
-            <span>Goal</span>
+            <span>About</span>
           </Link>
           <Link
             href={"/body-weight"}
-            className={`${styles.goal} ${
+            className={`${styles.about} ${
               pathname === "/body-weight" ? styles.pageActive : ""
             }`}
             onClick={removeMobileNavActiveClass}
@@ -190,10 +190,18 @@ export default function Navbar() {
             ))}
           {!loading && !user ? (
             <>
-              <Link href="/login" className={styles.signIn}>
+              <Link
+                href="/login"
+                className={styles.signIn}
+                onClick={removeMobileNavActiveClass}
+              >
                 Login
               </Link>
-              <Link href="/register" className={styles.signUp}>
+              <Link
+                href="/register"
+                className={styles.signUp}
+                onClick={removeMobileNavActiveClass}
+              >
                 Register
               </Link>
             </>

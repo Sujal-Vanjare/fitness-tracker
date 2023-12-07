@@ -16,25 +16,36 @@ export default function Page() {
 
   const { user, loading } = useFetchUser();
   const [errorMsg, setErrorMsg] = useState("");
+  const [loadingLogin, setLoadingLogin] = useState(false); // for login loading
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingLogin(true); // Set loading to true when login starts
 
-    const responseData = await fetcher(`${API_URL}/api/auth/local`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        identifier: data.identifier,
-        password: data.password,
-      }),
-    });
-    if (responseData.error) {
-      setErrorMsg("Invalid identifier or password. Please choose correct one.");
-    } else {
-      // Login successful
-      setToken(responseData);
+    try {
+      const responseData = await fetcher(`${API_URL}/api/auth/local`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          identifier: data.identifier,
+          password: data.password,
+        }),
+      });
+
+      if (responseData.error) {
+        setErrorMsg(
+          "Invalid identifier or password. Please choose the correct one."
+        );
+      } else {
+        // Login successful
+        setToken(responseData);
+      }
+    } catch (error) {
+      setErrorMsg("An error occurred during login. Please try again.");
+    } finally {
+      setLoadingLogin(false); // Set loading to false after login completes (whether successful or not)
     }
   };
 
@@ -54,14 +65,6 @@ export default function Page() {
 
   return (
     <div className={styles.page}>
-      {!loading &&
-        (user ? (
-          <li>
-            <Link className={styles.profile} href="/profile"></Link>
-          </li>
-        ) : (
-          ""
-        ))}
       {!loading &&
         (user ? (
           <div className={styles.logoutContainer}>
@@ -113,9 +116,12 @@ export default function Page() {
               className={styles.eye}
             />
           </div>
-
-          <button className={styles.submit} type="submit">
-            Login
+          <button
+            className={styles.submit}
+            type="submit"
+            disabled={loadingLogin}
+          >
+            {loadingLogin ? "Logging in..." : "Login"}
           </button>
           <div className={styles.forgot}> Forgot Password?</div>
           <div className={styles.errorMsg}>{errorMsg}</div>

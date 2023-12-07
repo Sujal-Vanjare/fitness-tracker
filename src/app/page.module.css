@@ -1,4 +1,163 @@
 .page {
-  width: 700px;
-  margin: 0 auto;
+  width: 975px;
+  margin: auto;
+  padding: 40px 0;
+}
+
+.head {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.subHead {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.guideList {
+  list-style: none;
+  margin-top: 30px;
+}
+
+.howHead {
+  margin-top: 50px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.howSubHead {
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.section {
+  background-color: var(--nav-container-bg);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 30px;
+  width: 100%;
+}
+.guideHead {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 10px;
+  padding-left: 10px;
+}
+.boxContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  margin-top: 20px;
+}
+.box1 {
+  grid-area: 1 / 1 / 2 / 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.box2 {
+  grid-area: 1 / 2 / 2 / 3;
+  font-size: 16px;
+  padding-left: 25px;
+}
+
+.box2 ul li {
+  margin-bottom: 20px;
+}
+
+.link {
+  color: #7976ff;
+  text-decoration: underline;
+}
+
+.registerImg,
+.loginImg,
+.goalWeightImg,
+.weightImg,
+.deleteImg,
+.featureImg {
+  border-radius: 16px;
+}
+
+@media screen and (max-width: 1560px) {
+  .page {
+    width: 730px;
+  }
+
+  .head {
+    font-size: 44px;
+  }
+
+  .registerImg {
+    width: 320px;
+    height: 448px;
+  }
+
+  .loginImg {
+    width: 320px;
+    height: 384px;
+  }
+
+  .goalWeightImg {
+    width: 320px;
+    height: 384px;
+  }
+  .weightImg {
+    width: 320px;
+    height: 219px;
+  }
+
+  .deleteImg {
+    width: 320px;
+    height: 129px;
+  }
+
+  .featureImg {
+    width: 320px;
+    height: 465px;
+  }
+}
+@media screen and (max-width: 1300px) {
+  .page {
+    width: 525px;
+  }
+
+  .head {
+    font-size: 40px;
+    font-weight: 600;
+  }
+
+  .boxContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr;
+    gap: 30px;
+  }
+  .box1 {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+
+  .box2 {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+}
+@media screen and (max-width: 995px) {
+  .page {
+    padding: 76px 0;
+  }
+}
+
+@media screen and (max-width: 824px) {
+  .page {
+    padding: 52px 0;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .page {
+    width: 100%;
+    padding: 52px 10px;
+  }
 }

@@ -371,7 +371,7 @@ export default function Page() {
                     ? "Loosed"
                     : "Maintained"}
                 </span>{" "}
-                this Month
+                since last
               </h4>
             </div>
           </div>

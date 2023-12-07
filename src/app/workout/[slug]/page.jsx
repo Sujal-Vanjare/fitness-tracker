@@ -278,6 +278,15 @@ export default function Page({ params }) {
   const options = {
     plugins: {
       legend: false,
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const label = context.dataset.label || "";
+            const value = context.parsed.y;
+            return `${label}: ${value} Kg`;
+          },
+        },
+      },
     },
     responsive: true,
     scales: {
@@ -289,7 +298,7 @@ export default function Page({ params }) {
           },
           color: "white",
           callback: function (value, index, values) {
-            return value + " kg"; // Return a string with " kg" appended to the tick value
+            return value + " kg"; // Return a string with " kg" appended to the tick value, on Y axis
           },
         },
         // max: 100,
@@ -410,7 +419,7 @@ export default function Page({ params }) {
                     ? "Loosed"
                     : "Maintained"}
                 </span>{" "}
-                this Month
+                since last
               </h4>
             </div>
           </div>
