@@ -4,9 +4,67 @@
   padding: 40px 0;
 }
 
+.section {
+  background-color: var(--nav-container-bg);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 30px;
+  width: 100%;
+}
+
+.head {
+  font-size: 42px;
+  font-weight: 600;
+}
+
+.subHead {
+  margin-top: 20px;
+  font-size: 19px;
+  font-weight: 400;
+}
+
+.howHead {
+  margin-top: 36px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.howSubHead {
+  font-size: 17px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.guideHead {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 10px;
+  padding-left: 10px;
+}
+
+.boxContainer {
+  margin-top: 20px;
+}
+
+.box2 {
+  font-size: 18px;
+  padding-left: 25px;
+}
+
+.box2 ul li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
 @media screen and (max-width: 1560px) {
   .page {
     width: 730px;
+  }
+
+  .head {
+    font-size: 40px;
   }
 }
 @media screen and (max-width: 1300px) {
