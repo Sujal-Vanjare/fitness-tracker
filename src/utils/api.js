@@ -93,26 +93,17 @@ export async function deleteDataFromApi(endpoint) {
   }
 }
 
-//
-
+// synchronous function for fetching data from a specified URL with optional request options.
 export async function fetcher(url, options = {}) {
   let response;
+
+  // If options are not provided, perform a simple fetch without additional options
   if (!options) {
     response = await fetch(url);
   } else {
+    // Otherwise, perform a fetch with the provided options
     response = await fetch(url, options);
   }
-  const data = await response.json();
+  const data = await response.json(); // Parse the response body as JSON
   return data;
 }
-
-// useEffect(() => {
-//   fetchDataFromApi("/api/users/me?populate=body_weights", jwtToken)
-//     .then((data) => {
-//       setBodyWeight(data.body_weights);
-//       // console.log(data.body_weights);
-//     })
-//     .catch((error) => {
-//       console.error("Failed to fetch weight history:", error);
-//     });
-// }, []);

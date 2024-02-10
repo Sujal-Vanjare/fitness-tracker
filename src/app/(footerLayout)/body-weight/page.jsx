@@ -64,10 +64,10 @@ function aggregateWeightByMonth(bodyWeights) {
 
 export default function Page() {
   const id = getUserId();
+
   if (!id) {
     // Redirect to login page if the user is not logged in
     redirect("/login");
-    return null; // to prevent further execution of the component
   }
 
   const [bodyWeights, setBodyWeights] = useState([]); // Initialize weights as an object with a data property that is an empty array

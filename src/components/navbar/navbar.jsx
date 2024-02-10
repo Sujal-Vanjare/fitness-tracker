@@ -7,51 +7,57 @@ import { usePathname } from "next/navigation";
 import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
 import { fetchDataFromApi } from "@/utils/api";
 import { useFetchUser } from "@/utils/authContext";
-import { getTokenFromLocalCookie, unsetToken } from "@/utils/auth";
+import { unsetToken } from "@/utils/auth";
 
 export default function Navbar() {
-  const jwt = getTokenFromLocalCookie();
-  const pathname = usePathname();
+  const pathname = usePathname(); // For highlighting the current page Link
+  const [isVisible, setIsVisible] = useState(true); // For workout list show and hide
+  const [navActive, setNavActive] = useState(true); // For mobile nav active and inactive
+  const [workoutList, setWorkoutList] = useState(""); // for workout list data storing
+  const { user, loading } = useFetchUser(); // finding if user logged in or not
 
-  const [isVisible, setIsVisible] = useState(true);
-
+  //  toggle visibility of workout list
   const visibleButton = () => {
     setIsVisible(!isVisible);
   };
 
-  const [navActive, setNavActive] = useState(true);
-
+  // toggle mobile nav active class
   const mobileNavActiveClass = () => {
     setNavActive(!navActive);
   };
+
+  // to remove mobile nav active class
   const removeMobileNavActiveClass = () => {
     setNavActive(true);
   };
 
-  const [workoutList, setWorkoutList] = useState("");
-
-  // fetching Workout List
+  // Fetch workout list when user is authenticated
   useEffect(() => {
-    fetchDataFromApi("/api/workout-lists", jwt)
-      .then((data) => {
-        setWorkoutList(data);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch weight history:", error);
-      });
-  }, []);
-  // ////
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
-  const { user, loading } = useFetchUser();
+  // Function to fetch workout list from API
+  const fetchData = async () => {
+    try {
+      const data = await fetchDataFromApi("/api/workout-lists");
+      setWorkoutList(data);
+    } catch (error) {
+      console.error("Failed to fetch workout list:", error);
+    }
+  };
+  //
 
+  // Function to handle user logout
   const logout = () => {
     unsetToken();
   };
   const initials = user
-    ? user
+    ? user // If the user exist, split the user's full name into an array of words
         .split(" ")
-        .map((word) => word[0])
-        .join("")
+        .map((word) => word[0]) // Map over each word in the array and extract the first letter of each word
+        .join("") // Join the extracted first letters together into a single string
     : "";
 
   return (
@@ -142,7 +148,8 @@ export default function Navbar() {
           <ul
             className={`${styles.workoutList} ${isVisible ? "" : styles.hide}`}
           >
-            {workoutList &&
+            {user ? (
+              workoutList &&
               workoutList.data &&
               workoutList.data
                 .sort((a, b) => a.attributes.num - b.attributes.num)
@@ -166,7 +173,12 @@ export default function Navbar() {
                     />
                     <span>{workout.attributes.workoutName}</span>
                   </Link>
-                ))}
+                ))
+            ) : (
+              <li className={styles.listItem}>
+                <p>Login First</p>
+              </li>
+            )}
           </ul>
 
           <div className={styles.darkModeButton}>
@@ -186,28 +198,23 @@ export default function Navbar() {
                 </div>
               </>
             ) : (
-              ""
+              <>
+                <Link
+                  href="/login"
+                  className={styles.signIn}
+                  onClick={removeMobileNavActiveClass}
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className={styles.signUp}
+                  onClick={removeMobileNavActiveClass}
+                >
+                  Register
+                </Link>
+              </>
             ))}
-          {!loading && !user ? (
-            <>
-              <Link
-                href="/login"
-                className={styles.signIn}
-                onClick={removeMobileNavActiveClass}
-              >
-                Login
-              </Link>
-              <Link
-                href="/register"
-                className={styles.signUp}
-                onClick={removeMobileNavActiveClass}
-              >
-                Register
-              </Link>
-            </>
-          ) : (
-            ""
-          )}
         </div>
       </nav>
     </div>

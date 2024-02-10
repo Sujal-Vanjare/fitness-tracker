@@ -1,0 +1,37 @@
+.page {
+  display: flex;
+  justify-content: space-between;
+  width: 975px;
+  margin: 0 auto;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.link {
+  transition: all 400ms ease;
+}
+
+.link:hover {
+  color: #a78bfa;
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 1560px) {
+  .page {
+    width: 730px;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .page {
+    width: 525px;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .page {
+    width: 100%;
+    padding: 10px;
+  }
+}

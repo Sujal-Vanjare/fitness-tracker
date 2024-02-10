@@ -21,6 +21,7 @@ import {
 import { useEffect, useState } from "react";
 import { getUserId } from "@/utils/auth";
 import { redirect } from "next/navigation";
+import Footer from "@/components/footer/footer";
 
 ChartJS.register(
   LineElement,

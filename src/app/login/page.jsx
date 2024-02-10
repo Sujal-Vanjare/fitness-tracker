@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import { useState } from "react";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { fetcher } from "@/utils/api";
 import { setToken, unsetToken } from "@/utils/auth";
 import { useFetchUser } from "@/utils/authContext";
@@ -63,27 +64,12 @@ export default function Page() {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
+  if (user) {
+    redirect("/body-weight");
+  }
+
   return (
     <div className={styles.page}>
-      {!loading &&
-        (user ? (
-          <div className={styles.logoutContainer}>
-            <h2 className={styles.head}>Welcome Back!</h2>
-            <p className={styles.wlcTxt}>
-              Great to see you again. Let's continue your fitness journey!
-            </p>
-            <h3>Go to .. </h3>
-            <Link href="/" className={styles.home}>
-              Home page
-            </Link>
-            <div className={styles.forgot}>or you can logout!</div>
-            <div className={styles.logoutBtn} onClick={logout}>
-              Logout
-            </div>
-          </div>
-        ) : (
-          ""
-        ))}
       {!loading && !user ? (
         <form onSubmit={handleSubmit} className={styles.form}>
           <h2 className={styles.head}>Login to continue</h2>
@@ -133,7 +119,18 @@ export default function Page() {
           </div>
         </form>
       ) : (
-        ""
+        <div className={styles.logoutContainer}>
+          <h2 className={styles.head}>Welcome Back!</h2>
+          <p className={styles.wlcTxt}>
+            Great to see you again. Let's continue your fitness journey!
+          </p>
+          <h3 className={styles.redirectTxt}>Redirecting you ... </h3>
+
+          <div className={styles.forgot}>or you can logout!</div>
+          <div className={styles.logoutBtn} onClick={logout}>
+            Logout
+          </div>
+        </div>
       )}
     </div>
   );

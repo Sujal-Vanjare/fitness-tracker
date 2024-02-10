@@ -7,6 +7,7 @@ import { setToken, unsetToken } from "@/utils/auth";
 import { fetcher } from "@/utils/api";
 import { API_URL } from "@/utils/urls";
 import { useFetchUser } from "@/utils/authContext";
+import { redirect } from "next/navigation";
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
@@ -68,6 +69,10 @@ export default function Page() {
   const logout = () => {
     unsetToken();
   };
+
+  if (user) {
+    redirect("/body-weight");
+  }
 
   return (
     <div className={styles.page}>
