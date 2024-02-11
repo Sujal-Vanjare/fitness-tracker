@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://fitnesstrackernext.vercel.app
+
+# Sitemaps
+Sitemap: https://fitnesstrackernext.vercel.app/sitemap.xml
