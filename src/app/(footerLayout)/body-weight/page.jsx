@@ -413,6 +413,10 @@ export default function Page() {
 
         {loading ? (
           <div className={styles.thirdRowItem}>Updating...</div>
+        ) : bodyWeights.length === 0 ? (
+          <div className={styles.thirdRowItem}>
+            You haven't added any data yet
+          </div>
         ) : (
           bodyWeights.map((weightData) => (
             <div key={weightData.id} className={styles.thirdRowItem}>

@@ -10,15 +10,18 @@ import { useFetchUser } from "@/utils/authContext";
 import { redirect } from "next/navigation";
 
 export default function Page() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // to manage the visibility of the password input
 
+  // Function to toggle the visibility of the password
   const handleTogglePassword = () => {
+    // previous show password state , set to opposite
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  /////
+  // Getting user data and loading status from the useFetchUser custom hook
   const { user, loading } = useFetchUser();
 
+  //  for registering user
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -52,7 +55,7 @@ export default function Page() {
         );
       } else {
         // Registration successful
-        setToken(responseData);
+        setToken(responseData); // set all token in cookies
       }
     } catch (error) {
       console.error(error);
@@ -61,42 +64,23 @@ export default function Page() {
     }
   };
 
+  // Function to handle input changes in the registration form
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
+    const { name, value } = e.target; // ...user data , is from  all the empty key-values, of initial state
+    setUserData({ ...userData, [name]: value }); // name - input name,  and their value
   };
 
+  // function when logout remove all the token that set in cookies
   const logout = () => {
     unsetToken();
   };
 
   if (user) {
-    redirect("/body-weight");
+    redirect("/body-weight"); // when the user logged in it redirect to body-weight page
   }
 
   return (
     <div className={styles.page}>
-      {!loading &&
-        (user ? (
-          <div className={styles.logoutContainer}>
-            <h2 className={styles.head}>Registration Successful!</h2>
-            <p className={styles.wlcTxt}>
-              Great! You're all set. Start tracking your workouts and achieving
-              your fitness goals now!
-            </p>
-
-            <h3>Go to .. </h3>
-            <Link href="/" className={styles.home}>
-              Home page
-            </Link>
-            <div className={styles.forgot}>or you can logout!</div>
-            <div className={styles.logoutBtn} onClick={logout}>
-              Logout
-            </div>
-          </div>
-        ) : (
-          ""
-        ))}
       {!loading && !user ? (
         <form onSubmit={handleSubmit} className={styles.form}>
           <h2 className={styles.head}>Register your account</h2>
@@ -145,7 +129,6 @@ export default function Page() {
           >
             {loadingRegister ? "Registering..." : "Register"}
           </button>
-          {/* <div className={styles.forgot}> Forgot Password?</div> */}
           <div className={styles.errorMsg}>{errorMsg}</div>
           <div className={styles.signUpContainer}>
             <span className={styles.newHere}>Already have account?</span>
@@ -155,7 +138,18 @@ export default function Page() {
           </div>
         </form>
       ) : (
-        ""
+        <div className={styles.logoutContainer}>
+          <h2 className={styles.head}>Welcome Back!</h2>
+          <p className={styles.wlcTxt}>
+            Great to see you again. Let's continue your fitness journey!
+          </p>
+          <h3 className={styles.redirectTxt}>Redirecting you ... </h3>
+
+          <div className={styles.forgot}>or you can logout!</div>
+          <div className={styles.logoutBtn} onClick={logout}>
+            Logout
+          </div>
+        </div>
       )}
     </div>
   );

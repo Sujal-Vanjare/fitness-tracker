@@ -21,8 +21,8 @@ import {
 import { useEffect, useState } from "react";
 import { getUserId } from "@/utils/auth";
 import { redirect } from "next/navigation";
-import Footer from "@/components/footer/footer";
 
+// Registering ChartJS components for use in creating charts
 ChartJS.register(
   LineElement,
   CategoryScale,
@@ -33,34 +33,45 @@ ChartJS.register(
   Filler
 );
 
+// Function to aggregate weight data by month
 function aggregateWeightByMonth(bodyWeights) {
-  const aggregatedData = {};
+  const aggregatedData = {}; // Initialize an object to store aggregated weight data
 
+  // Iterate over each entry in the bodyWeights array
   bodyWeights.forEach((bodyWeightsEntry) => {
-    const date = new Date(bodyWeightsEntry.date);
-    const year = date.getFullYear();
+    const date = new Date(bodyWeightsEntry.date); // Extract year, month, and day from the date of each entry
+    const year = date.getFullYear(); // Get the year from the date
     const month = date.toLocaleString("default", { month: "short" }); // Get short month name, e.g., "Jan"
-    const day = date.getDate();
+    const day = date.getDate(); // Get the day from the date
 
+    // Construct a key for the aggregatedData object using day, month, and year
     const key = `${day} ${month} ${year}`; // Adjusted key to include day, month, and year
+
+    // If the key doesn't exist in aggregatedData, initialize it with sum and count properties
     if (!aggregatedData[key]) {
       aggregatedData[key] = { sum: 0, count: 0 };
     }
 
+    // Accumulate weight and count for each key
     aggregatedData[key].sum += bodyWeightsEntry.weight;
     aggregatedData[key].count++;
   });
 
+  // Initialize an array to store the final result
   const result = [];
 
+  // Iterate over each key in the aggregatedData object
   for (const key in aggregatedData) {
+    // Check if the current key belongs to the object itself (not inherited)
     if (aggregatedData.hasOwnProperty(key)) {
+      // Calculate the average weight for the current month
       const avgWeight = aggregatedData[key].sum / aggregatedData[key].count;
+      // Push an object representing the month and its average weight to the result array
       result.push({ month: key, weight: avgWeight });
     }
   }
 
-  return result;
+  return result; // Return the final result containing aggregated weight data by month
 }
 
 export default function Page({ params }) {
@@ -74,21 +85,20 @@ export default function Page({ params }) {
   // Pluralize the slug
   const pluralizedSlug = pluralize(originalSlug);
 
-  //gettiing user id
+  //getting user id
   const id = getUserId();
   if (!id) {
     // Redirect to login page if the user is not logged in
     redirect("/login");
-    return null; // to prevent further execution of the component
   }
 
   const [bodyWeights, setBodyWeights] = useState([]); // Initialize weights as an object with a data property that is an empty array
   const [currentWeight, setCurrentWeight] = useState("..."); // Find the most recent weight entry
   const [goalBodyWeight, setGoalBodyWeight] = useState("..."); // goal bodyWeight
-  const [isEditingGoalWeight, setIsEditingGoalWeight] = useState(false);
-  const [newGoalWeight, setNewGoalWeight] = useState("");
+  const [isEditingGoalWeight, setIsEditingGoalWeight] = useState(false); // goal weight edit tab hide and show
+  const [newGoalWeight, setNewGoalWeight] = useState(""); // goal weight input field
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); //loading when add new weight history
 
   const [date, setDate] = useState(""); // upload bodyWeight, date field
   const [reps, setReps] = useState(""); // upload bodyWeight, reps field
@@ -198,7 +208,7 @@ export default function Page({ params }) {
 
         // Sort the updated data by date in descending order
         const sortedBodyWeights = updatedData[underscoreSlug].sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
+          (a, b) => new Date(b.date) - new Date(a.date) // latest date first, descending order based on the date
         );
 
         // Update the state with the sorted data
@@ -226,7 +236,7 @@ export default function Page({ params }) {
 
     const endpoint = `/api/users/${id}`;
     const data = {
-      [`goal_${underscoreSlug}`]: parseFloat(newGoalWeight), // Convert the value to a floating-point number
+      [`goal_${underscoreSlug}`]: parseFloat(newGoalWeight), // Convert the value to a floating-point number (00.00)
     };
 
     try {
@@ -240,32 +250,33 @@ export default function Page({ params }) {
     }
   };
 
-  // ////  graph code
+  // adding data to graph
   const chartData = aggregateWeightByMonth(bodyWeights);
 
   // Calculate weight difference between the current month and the previous month
   const currentMonthWeight = chartData[0]?.weight || 0;
   const previousMonthWeight = chartData[1]?.weight || 0;
   const weightDifference = currentMonthWeight - previousMonthWeight;
-  const formattedWeightDifference =
+  const formattedWeightDifference = // Format weight difference to 1 decimal place if not a whole number, otherwise to 0 decimal places
     weightDifference % 1 !== 0
       ? weightDifference.toFixed(1)
       : weightDifference.toFixed(0);
-  chartData.reverse();
+  chartData.reverse(); // Reverse the order of chartData array to display months in chronological order
 
   const data = {
-    labels: chartData.map((data) => data.month),
+    labels: chartData.map((data) => data.month), // Extract month labels from chartData array
     datasets: [
       {
-        label: "Weight",
-        data: chartData.map((data) => data.weight),
-        borderColor: "#EAEAF2",
-        borderWidth: 3,
-        pointBorderColor: "#27262B",
-        pointBorderWidth: 3,
-        tension: 0.5,
-        fill: true,
+        label: "Weight", // Label for weight dataset
+        data: chartData.map((data) => data.weight), // Extract weight data from chartData array
+        borderColor: "#EAEAF2", // Border color for the line chart
+        borderWidth: 3, // Border width for the line chart
+        pointBorderColor: "#27262B", // Border color for data points
+        pointBorderWidth: 3, // Border width for data points
+        tension: 0.5, // Line tension (curvature) for smoother lines
+        fill: true, // Fill the area under the line chart
         backgroundColor: (context) => {
+          // Create linear gradient for the fill color
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 300);
           gradient.addColorStop(0, "#5063EE");
@@ -276,20 +287,22 @@ export default function Page({ params }) {
     ],
   };
 
+  // Configuration options for ChartJS
   const options = {
     plugins: {
       legend: false,
       tooltip: {
         callbacks: {
+          // Callback function to format tooltip labels
           label: function (context) {
-            const label = context.dataset.label || "";
-            const value = context.parsed.y;
-            return `${label}: ${value} Kg`;
+            const label = context.dataset.label || ""; // Get dataset label
+            const value = context.parsed.y; // Get parsed y-value
+            return `${label}: ${value} Kg`; // Return formatted label with value in kilograms
           },
         },
       },
     },
-    responsive: true,
+    responsive: true, // Enable responsiveness
     scales: {
       y: {
         ticks: {
@@ -298,7 +311,7 @@ export default function Page({ params }) {
             weight: "bold",
           },
           color: "white",
-          callback: function (value, index, values) {
+          callback: function (value) {
             return value + " kg"; // Return a string with " kg" appended to the tick value, on Y axis
           },
         },
@@ -309,21 +322,22 @@ export default function Page({ params }) {
         },
       },
       x: {
+        // X-axis configuration
         ticks: {
           font: {
-            size: 17,
-            weight: "bold",
+            size: 17, // Font size for x-axis ticks
+            weight: "bold", // Font weight for x-axis ticks
           },
-          color: "white",
+          color: "white", // Text color for x-axis ticks
         },
         grid: {
-          color: "rgba(255, 255, 255, 0.2)",
+          color: "rgba(255, 255, 255, 0.2)", // Color for x-axis grid lines
         },
       },
     },
   };
 
-  //  media query to apply the smallScreenFont class for small screens
+  // Apply font size adjustments for small screens using media queries
   if (window.innerWidth <= 1560) {
     options.scales.y.ticks.font.size = 14;
     options.scales.x.ticks.font.size = 14;
@@ -474,6 +488,10 @@ export default function Page({ params }) {
 
         {loading ? (
           <div className={styles.thirdRowItem}>Updating...</div>
+        ) : bodyWeights.length === 0 ? (
+          <div className={styles.thirdRowItem}>
+            You haven't added any data yet
+          </div>
         ) : (
           bodyWeights.map((weightData) => (
             <div key={weightData.id} className={styles.thirdRowItem}>
