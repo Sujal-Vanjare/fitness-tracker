@@ -1,4 +1,5 @@
 import { Rubik } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import Navbar from "@/components/navbar/navbar";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }) {
           <Navbar />
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
