@@ -47,6 +47,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <meta
+        name="google-site-verification"
+        content="k3Mu_NRmonR916_W69sQXbvwCkKEQ8VczZ8IAWJpmBc"
+      />
       <body className={rubik.className}>
         <ThemeProvider>
           <Navbar />
